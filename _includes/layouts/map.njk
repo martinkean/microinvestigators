@@ -1,11 +1,7 @@
 ---
 section: map
 ---
-
-
-{{ layoutContent | safe }}
-
-<!DOCTYPE html>
+<!doctype html>
 <html>
 
   <head>
@@ -116,10 +112,10 @@ section: map
       };
 
       //YOUR TURN: add your Mapbox access token 
-      mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGlua2VhbiIsImEiOiJjazk2aGoxMWMwMHRvM2VwcXptYWZpNnp4In0.hC0JsuSPPtlTl725ww5GFQ';
+      mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGlua2VhbiIsImEiOiJjazJ2Zmt3cDgwNG52M2JxbXZ5OHVmNGVrIn0.83FDGF7SZfT3gqCXT1TuuQ';
       var map = new mapboxgl.Map({
         container: 'map', // container id
-        style: "mapbox://styles/mapbox/light-v10", //YOUR TURN: choose a style: https://docs.mapbox.com/api/maps/#styles
+        style: "mapbox://styles/martinkean/ck2vfpcsp0j7g1cqxh3p3lv00", //YOUR TURN: choose a style: https://docs.mapbox.com/api/maps/#styles
         // center: [-45.8810937, 170.5028467], // starting position [lng, lat]
         center: [170.5348772, -45.8533926], // starting position [lng, lat]   45.8533926,170.5348772
         zoom: 11, // starting zoom
