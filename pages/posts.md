@@ -4,15 +4,15 @@ pagination:
   size: 1
   alias: posts
 layout: layouts/base.njk
-title: Posts
+title: WP-Posts
 date: 2016-01-01T00:00:00.000Z
 permalink: /posts/index.html
 eleventyNavigation:
   key: Posts
-  order: 0
+  order: 1
 ---
 
 <h1>{{ posts.title.rendered }}</h1>
 <div class="mainContent">
-    {{posts.content.rendered | safe}}
+    {{ posts.content.rendered | safe }}
 </div>

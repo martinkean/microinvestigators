@@ -2,17 +2,18 @@
 pagination:
   data: samples
   size: 1
+  resolve: values
   alias: samples
 layout: layouts/base.njk
 title: Samples
 date: 2016-01-01T00:00:00.000Z
-permalink: /samples/index.html
+permalink: "samples/{{ sample.title.rendered | slug }}/"
 eleventyNavigation:
   key: Samples
-  order: 0
+  order: 1
 ---
 
-<h1>{{ samples.title.rendered }}</h1>
+<h1>{{ sample.title.rendered }}</h1>
 <div class="mainContent">
-    {{ samples.content.rendered | safe }}
+    {{ sample.content.rendered | safe }}
 </div>
