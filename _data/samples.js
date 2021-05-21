@@ -6,4 +6,4 @@ module.exports = async function () {
   return fetch("https://design.ac.nz/student/2021/microinvestigators/wp-json/wp/v2/sample/")
     .then((res) => res.json())
     .then((json) => json);
-};
+};  
