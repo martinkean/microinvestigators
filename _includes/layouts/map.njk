@@ -2,170 +2,134 @@
 section: map
 ---
 <!doctype html>
-<html>
-
-  <head>
+<html>      
+    <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <h1>{{ title }}</h1>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
-    <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <title>{{ title }}</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.3.0-beta.1/mapbox-gl.css" rel="stylesheet">
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.0-beta.1/mapbox-gl.js"></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"> 
+        <style>
+            body { margin: 0; padding: 0; font-family: 'Work Sans', sans-serif; }
+            #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+            #side_panel{ position:fixed;width:30%;background:white;height:100vh;z-index: 2; }
+            .side_item{ padding:30px;border-bottom:1px solid black;cursor:pointer; }
+            .side_item:hover{ background:#eee; }
+            .side_header { font-weight:bold; color:green; }
+            .mapboxgl-popup-content h2 { font-weight: 700; font-size: 2em; color: green; margin: 0 0 10px 0; }
+            .popup-label { font-weight: 600; color: green; }
+            .popup-data { font-weight: 400; color: #333; }
+            .mapboxgl-popup-content {
+              padding: 20px;
+              border-radius: 6px;
+              min-width: 140%;
+              border: 8px solid #cfe6cf;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="side_panel"></div>
+        <div id="map"></div>
+ 
+        <script>
 
-  <style>
-    body {
-      background: #404040;
-      margin: 0;
-      padding: 0;
-    }
+            var transformRequest = (url, resourceType) => {
+              var isMapboxRequest =
+                url.slice(8, 22) === "api.mapbox.com" ||
+                url.slice(10, 26) === "tiles.mapbox.com";
+              return {
+                url: isMapboxRequest
+                  ? url.replace("?", "?pluginName=sheetMapper&")
+                  : url
+              };
+            };
 
-    #map {
-      border-left: 1px solid #fff;
-      position: absolute;
-      width: 100%;
-      top: 0;
-      bottom: 0;
-    }
+            mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGlua2VhbiIsImEiOiJjazJ2Zmt3cDgwNG52M2JxbXZ5OHVmNGVrIn0.83FDGF7SZfT3gqCXT1TuuQ';
+            var map = new mapboxgl.Map({
+              container: 'map', // container id
+              style: "mapbox://styles/martinkean/ck2vfpcsp0j7g1cqxh3p3lv00",
+              center: [168.984942,-45.770090], // starting position [lng, lat] -45.770090, 168.984942, Awatere, Southland
+              zoom: 8, // starting zoom
+              transformRequest: transformRequest
+            });
 
-    .mapboxgl-popup {
-      padding-bottom: 5px;
-    }
+            map.on('load', function () {
+                fetch("https://spreadsheets.google.com/feeds/cells/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/1/public/full?alt=json")
+                .then(res => res.json())
+                .then(data => {
+                    let headerRow = "1";
+                    let currRow = "1";
+                    let headerFields = [];
+                    let dataFields = [];
 
-    .mapboxgl-popup-close-button {
-      display: none;
-    }
+                    let side_fields = ["Location","Collected by","Date"];
 
-    .mapboxgl-popup-content {
-      font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
-      padding: 0;
-      width: 250px;
-    }
+                    let currLat = 0;
+                    let currLng = 0;
+                    let currObj = {};
+                    let popups = {};
 
-    .mapboxgl-popup-content-wrapper {
-      padding: 1%;
-    }
+                    let div = document.createElement('div');  
 
-    .mapboxgl-popup-content h3 {
-      background: #20cc1b;
-      text-align: center;
-      color: #fff;
-      margin: 0;
-      display: block;
-      padding: 15px;
-      font-weight: 700;
-      margin-top: -5px;
-    }
+                    data.feed.entry.forEach((item,i) => {         
+                    
+                        if(item["gs$cell"]["row"] == headerRow)                                        
+                            headerFields.push(item["gs$cell"]["inputValue"])                                
+                        else if(item["gs$cell"]["row"] != currRow)
+                        {   
+                            currRow = item["gs$cell"]["row"];             
+                            currObj = {};                                      
+                            div = document.createElement('div');                                                                      
+                            div.classList.add("side_item");                            
+                            document.querySelector("#side_panel").append(div);
+                        } 
+                        else 
+                        {
+                            currObj[`${headerFields[parseInt(item["gs$cell"]["col"])-1]}`] = `${item["gs$cell"]["inputValue"]}`;
+                            if(side_fields.indexOf(headerFields[parseInt(item["gs$cell"]["col"])-1]) != -1)
+                                div.innerHTML += `<span class="side_header">${headerFields[parseInt(item["gs$cell"]["col"])-1]}</span> ${item["gs$cell"]["inputValue"]}<br/>`;
 
-/*     .mapboxgl-popup-content:hover {
-      background: #eb4034;
-    } */
-    
-    .mapboxgl-popup-content h4 {
-      margin: 0;
-      display: block;
-      padding: 10px 3px 10px 10px;
-      font-weight: 400;
-    }
+                            if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Lat")
+                                currLat = item["gs$cell"]["inputValue"]
+                            if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Long")
+                                currLng = item["gs$cell"]["inputValue"]
+                        }                            
+                        
+                        if((data.feed.entry[i+1] && data.feed.entry[i+1]["gs$cell"]["row"] != currRow) || !data.feed.entry[i+1])
+                            if(currLat != 0 && currLng != 0)
+                            {                                          
+                                let popup = new mapboxgl.Popup();
+                                let popup_html = "<h2>Microplastics count</h2>";
+                                Object.keys(currObj).forEach(k => {
+                                    popup_html += `<span class="popup-label">${k}: </span><span class="popup-data">${currObj[k]}</span></br>`;
+                                });
+                                popup.setHTML(popup_html);
 
-    .mapboxgl-container {
-      cursor: pointer;
-    }
+                                div.setAttribute("id",i);                                
 
-    .mapboxgl-popup-anchor-top>.mapboxgl-popup-content {
-      margin-top: 3px;
-    }
+                                let marker = new mapboxgl.Marker()
+                                    .setLngLat([currLng, currLat])
+                                    .setPopup(popup)
+                                    .addTo(map);
 
-    .mapboxgl-popup-anchor-top>.mapboxgl-popup-tip {
-      border-bottom-color: #20cc1b;
-    }
-    
-    .weblink a {
-      text-decoration: none;
-      color: #20cc1b;
-    }
-    
-    .weblink a:hover {
-      text-decoration: underline;
-      color: #1b6618;
-    }
+                                popups[i] = popup;
 
-  </style>
-  </head>
+                                div.addEventListener("click", function(){
+                                    popups[div.getAttribute("id")].addTo(map);
+                                });
 
-  <body>
+                                currLat = 0;
+                                currLng = 0;              
+                            }
+                    });
+                });                
+            });
 
-    <div id="map"></div>
-    
-    <script>
-      var transformRequest = (url, resourceType) => {
-        var isMapboxRequest =
-          url.slice(8, 22) === "api.mapbox.com" ||
-          url.slice(10, 26) === "tiles.mapbox.com";
-        return {
-          url: isMapboxRequest
-            ? url.replace("?", "?pluginName=sheetMapper&")
-            : url
-        };
-      };
-
-      //YOUR TURN: add your Mapbox access token 
-      mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGlua2VhbiIsImEiOiJjazJ2Zmt3cDgwNG52M2JxbXZ5OHVmNGVrIn0.83FDGF7SZfT3gqCXT1TuuQ';
-      var map = new mapboxgl.Map({
-        container: 'map', // container id
-        style: "mapbox://styles/martinkean/ck2vfpcsp0j7g1cqxh3p3lv00", //YOUR TURN: choose a style: https://docs.mapbox.com/api/maps/#styles
-        // center: [-45.8810937, 170.5028467], // starting position [lng, lat]
-        center: [170.5348772, -45.8533926], // starting position [lng, lat]   45.8533926,170.5348772
-        zoom: 11, // starting zoom
-        transformRequest: transformRequest
-      });
-      
-      // disable map zoom when using scroll
-      map.scrollZoom.disable();
-      
-      // Add zoom and rotation controls to the map.
-      map.addControl(new mapboxgl.NavigationControl());
-
-      map.on("load", function() {
-        init();
-      });
-
-      // Initialize Tabletop to access your table
-      function init() {
-        Tabletop.init({
-          // YOUR TURN: change 'key' value to point to your spreadsheet
-          key: 'https://docs.google.com/spreadsheets/d/1c6KhEZ3C4zs6gw7uagJFqKjOloUICfuAaK-51506A2E/',
-          // once Tabletop has loaded the data, it passes it to the 'callback' function, 'addPoints', defined below
-          callback: addPoints,
-          simpleSheet: true
-        });
-      }
-
-      // create a function called addPoints that iterates through your table (row by row) to create markers and popups
-      function addPoints(data) {
-
-        // iterate through your table to set the marker to lat/long values for each row
-
-        data.forEach(function(row) {
-  
-          var websiteLink = `<h4 class="weblink"><a href="${row.Website}"><b>Website</b></a></h4>`;
-          // create a variable for your popup and populate your popup with information from your table
-          var popup = new mapboxgl.Popup()
-            .setHTML(`<h3>` + row.Name + `</h3>` + '<h4>' + '<b>' + 'Address: ' + '</b>' + row.Address + '</h4>' + '<h4>' + '<b>' + 'Phone: ' + '</b>' + row.Phone + '</h4>' + websiteLink); // this uses the table to populate each popup
-          
-          // create a variable for your markup and add it to the map 
-          var marker = new mapboxgl.Marker({
-              color: '#20cc1b'
-            })
-            .setLngLat([row.Longitude, row.Latitude])
-            .setPopup(popup)
-            .addTo(map); // add the marker to the map
-        });
-      }
-
-    </script>
-  </body>
-
+        </script>
+ 
+    </body>
 </html>
