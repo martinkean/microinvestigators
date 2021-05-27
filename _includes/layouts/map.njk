@@ -1,22 +1,55 @@
 ---
 section: map
 ---
-<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Map</title><meta name="description" content=""><meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"><link href="https://api.mapbox.com/mapbox-gl-js/v2.3.0-beta.1/mapbox-gl.css" rel="stylesheet"><script src="https://api.mapbox.com/mapbox-gl-js/v2.3.0-beta.1/mapbox-gl.js"></script><link rel="preconnect" href="https://fonts.gstatic.com"><link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"><style>body { margin: 0; padding: 0; font-family: 'Work Sans', sans-serif; }
-        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-        #side_panel{ position:fixed;width:30%;background:white;height:100vh;z-index: 2;overflow-y:scroll }
-        .side_item{ padding:30px;border-bottom:1px solid black;cursor:pointer; }
-        .side_item:hover{ background:#eee; }
-        .side_header { font-weight:bold; color:green; }
-        .mapboxgl-popup-content h2 { font-weight: 700; font-size: 2em; color: green; margin: 0 0 10px 0; }
-        .popup-label { font-weight: 600; color: green; }
-        .popup-data { font-weight: 400; color: #333; }
-        .popup_image{ width:100%; }
-        .mapboxgl-popup-content {
-          padding: 20px;
-          border-radius: 6px;
-          min-width: 140%;
-          border: 8px solid #cfe6cf;
-        }</style></head><body><div id="side_panel"></div><div id="map"></div><script>var transformRequest = (url, resourceType) => {
+
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Map</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.3.0-beta.1/mapbox-gl.css" rel="stylesheet">
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.0-beta.1/mapbox-gl.js"></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+        <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+        <script src="https://cdn.amcharts.com/lib/4/themes/dataviz.js"></script>
+        <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+        <style>
+            body { margin: 0; padding: 0; font-family: 'Work Sans', sans-serif; }
+            #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+            #side_panel{ position:fixed;width:30%;background:white;height:100vh;z-index: 2;overflow-y:scroll }
+            .side_item{ padding:30px;border-bottom:1px solid black;cursor:pointer; }
+            .side_item:hover{ background:#eee; }
+            .side_header { font-weight:bold; color:green; }
+            .mapboxgl-popup-content h2 { font-weight: 700; font-size: 2em; color: green; margin: 0 0 10px 0; }
+            .popup-label { font-weight: 600; color: green; }
+            .popup-data { font-weight: 400; color: #333; }
+            .popup_image{ width:100%; }
+            .mapboxgl-popup-content {
+                padding: 20px;
+                border-radius: 6px;
+                min-width: 140%;
+                border: 8px solid #cfe6cf;
+            }
+            #chartdiv {
+                position:fixed;
+                background:white;
+                bottom:0;
+                right:0;
+                width: 70%;
+                height: 500px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="side_panel"></div>
+        <div id="map"></div>
+        <div id="chartdiv"></div>
+        <script>
+        var transformRequest = (url, resourceType) => {
           var isMapboxRequest =
             url.slice(8, 22) === "api.mapbox.com" ||
             url.slice(10, 26) === "tiles.mapbox.com";
@@ -44,6 +77,7 @@ section: map
                 let currRow = "1";
                 let headerFields = [];
                 let dataFields = [];
+                let currLocation = "";
 
                 let side_fields = ["Date","Location","Collected by"];
 
@@ -54,31 +88,24 @@ section: map
 
                 let popup_fields = []
 
-                let div = document.createElement('div');  
+                let div = document.createElement('div'); 
+                
+                let chart_data = [];
 
-                data.feed.entry.forEach((item,i) => {   
-                    //console.log(item);
+                data.feed.entry.forEach((item,i) => {                       
                     if(item["gs$cell"]["row"] == headerRow)                                        
                         headerFields.push(item["gs$cell"]["inputValue"])                                
-                    else if(item["gs$cell"]["row"] != currRow)
-                    {   
-                        currRow = item["gs$cell"]["row"];             
-                        currObj = {};                                      
-                        div = document.createElement('div');                                                                      
-                        div.classList.add("side_item");                            
-                        document.querySelector("#side_panel").append(div);
-
-                        currObj[`${headerFields[parseInt(item["gs$cell"]["col"])-1]}`] = `${item["gs$cell"]["inputValue"]}`;
-                        if(side_fields.indexOf(headerFields[parseInt(item["gs$cell"]["col"])-1]) != -1)
-                            div.innerHTML += `<span class="side_header">${headerFields[parseInt(item["gs$cell"]["col"])-1]}</span> ${item["gs$cell"]["inputValue"]}<br/>`;
-
-                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Lat")
-                            currLat = item["gs$cell"]["inputValue"]
-                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Long")
-                            currLng = item["gs$cell"]["inputValue"]
-                    } 
-                    else 
+                    else
                     {
+                        if(item["gs$cell"]["row"] != currRow)
+                        {   
+                            currRow = item["gs$cell"]["row"];             
+                            currObj = {};                                      
+                            div = document.createElement('div');                                                                      
+                            div.classList.add("side_item");                            
+                            document.querySelector("#side_panel").append(div);
+                        }
+
                         currObj[`${headerFields[parseInt(item["gs$cell"]["col"])-1]}`] = `${item["gs$cell"]["inputValue"]}`;
                         if(side_fields.indexOf(headerFields[parseInt(item["gs$cell"]["col"])-1]) != -1)
                             div.innerHTML += `<span class="side_header">${headerFields[parseInt(item["gs$cell"]["col"])-1]}</span> ${item["gs$cell"]["inputValue"]}<br/>`;
@@ -86,8 +113,18 @@ section: map
                         if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Lat")
                             currLat = item["gs$cell"]["inputValue"]
                         if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Long")
-                            currLng = item["gs$cell"]["inputValue"]
-                    }                            
+                            currLng = item["gs$cell"]["inputValue"]       
+                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Location")
+                            currLocation = item["gs$cell"]["inputValue"]   
+                        
+                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Fibre count"){
+                            let obj = {};
+                            obj["field"] = currLocation;
+                            obj["value"] = item["gs$cell"]["inputValue"];
+                            chart_data.push(obj); 
+                        }
+                            
+                    }                          
                     
                     if((data.feed.entry[i+1] && data.feed.entry[i+1]["gs$cell"]["row"] != currRow) || !data.feed.entry[i+1])
                         if(currLat != 0 && currLng != 0)
@@ -110,19 +147,66 @@ section: map
                                 .setLngLat([currLng, currLat])
                                 .setPopup(popup)
                                 .addTo(map);
-
+                           
                             popups[i] = popup;
 
-                            console.log(popups);
-
-                            div.addEventListener("click", function(){
-                                popups[div.getAttribute("id")].addTo(map);
+                            div.addEventListener("click", e => {
+                                console.log(e.target.getAttribute("id"),popups[e.target.getAttribute("id")]);
+                                popups[e.target.getAttribute("id")].addTo(map);
                             });
-
+                           
                             currLat = 0;
                             currLng = 0;              
                         }
                 });
+
+                am4core.ready(function() {
+
+                    // Themes begin
+                    am4core.useTheme(am4themes_dataviz);
+                    // Themes end
+
+                    var chart = am4core.create("chartdiv", am4charts.XYChart);
+                    chart.data = chart_data;
+
+                    chart.padding(40, 40, 40, 40);
+
+                    var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+                    categoryAxis.renderer.grid.template.location = 0;
+                    categoryAxis.dataFields.category = "field";
+                    categoryAxis.renderer.minGridDistance = 60;
+                    categoryAxis.renderer.inversed = true;
+                    categoryAxis.renderer.grid.template.disabled = true;
+
+                    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                    valueAxis.min = 0;
+                    valueAxis.extraMax = 0.1;
+
+                    var series = chart.series.push(new am4charts.ColumnSeries());
+                    series.dataFields.categoryX = "field";
+                    series.dataFields.valueY = "value";
+                    series.tooltipText = "{valueY.value}"
+                    series.columns.template.strokeOpacity = 0;
+                    series.columns.template.column.cornerRadiusTopRight = 10;
+                    series.columns.template.column.cornerRadiusTopLeft = 10;
+                    var labelBullet = series.bullets.push(new am4charts.LabelBullet());
+                    labelBullet.label.verticalCenter = "bottom";
+                    labelBullet.label.dy = -10;
+                    labelBullet.label.text = "{values.valueY.workingValue.formatNumber('#.')}";
+
+                    chart.zoomOutButton.disabled = true;
+
+                    // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+                    series.columns.template.adapter.add("fill", function (fill, target) {
+                        return chart.colors.getIndex(target.dataItem.index);
+                    });               
+
+                    categoryAxis.sortBySeries = series;
+
+                }); // end am4core.ready()       
             });                
         });
-    </script></body></html>
+
+    </script>
+</body>
+</html>
