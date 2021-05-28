@@ -17,37 +17,137 @@ section: map
         <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
         <script src="https://cdn.amcharts.com/lib/4/themes/dataviz.js"></script>
         <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
         <style>
-            body { margin: 0; padding: 0; font-family: 'Work Sans', sans-serif; }
-            #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-            #side_panel{ position:fixed;width:30%;background:white;height:100vh;z-index: 2;overflow-y:scroll }
+            :root {
+            --primary: blue;
+            --secondary: white;
+            --background: #d2e0f7;
+            }
+
+            body { margin: 0; padding: 0; font-family: 'Work Sans', sans-serif; display: grid;
+                    height: 100vh;
+                    grid-template-rows: auto 1fr auto;
+                    background-color: var(--background); }
+            main { margin: 0; }
+            #map { position: absolute; top: 120px; bottom: 0; width: 100%; }
+            #side_panel { position:fixed; top: 120px; width:30%; background:white; height:100vh; z-index: 2; overflow-y:scroll }
             .side_item{ padding:30px;border-bottom:1px solid black;cursor:pointer; }
-            .side_item:hover{ background:#eee; }
+            .side_item:hover { background:#eee; }
             .side_header { font-weight:bold; color:green; }
             .mapboxgl-popup-content h2 { font-weight: 700; font-size: 2em; color: green; margin: 0 0 10px 0; }
             .popup-label { font-weight: 600; color: green; }
             .popup-data { font-weight: 400; color: #333; }
-            .popup_image{ width:100%; }
+            .popup_image { width: 100%; }
             .mapboxgl-popup-content {
                 padding: 20px;
                 border-radius: 6px;
-                min-width: 140%;
+                width: 300px;
                 border: 8px solid #cfe6cf;
             }
+            .mapboxgl-popup-close-button {
+                right: 5px;
+                top: 5px;
+                width: 20px;
+                height: 20px;
+                color: green;
+            }
+            .mapboxgl-popup-anchor-top .mapboxgl-popup-tip { border-bottom-color: #cfe6cf; }
             #chartdiv {
                 position:fixed;
                 background:white;
                 bottom:0;
                 right:0;
                 width: 70%;
-                height: 500px;
+                height: 460px;
+            }
+            
+            a[href],
+                a[href]:visited {
+                }
+
+                a[href]:not(:hover) {
+                text-decoration: none;
+                }
+
+            .pagetesthead {
+                color: cornflowerblue;
+                }
+
+            /* Header Logo (style as h2) */
+                header > em {
+                display: block;
+                margin: 1.4em 0;
+                font-style: normal;
+            }
+
+            header em a {
+                color: blue;
+                font-size: 2.4em;
+                font-weight: 600;
+            }
+
+            header a:hover {
+                text-decoration: none;
+            }
+
+            header {
+                margin-left: 20px;
+                background-color: var(--background); }
+                min-height: 120px;
+                margin-top: 1.4em;
+            }
+
+            /* Header Nav */
+                header nav ul {
+                padding: 0;
+                list-style: none;
+            }
+
+            header nav ul {
+                padding-inline-start: 0;
+            }
+
+            header nav ul :first-child {
+                margin-left: 0;
+            }
+
+            header nav li {
+                display: inline-block;
+                margin: 0 0.25em;
+            }
+
+            header nav li a {
+                padding: 0.25em 0.5em;
+                border-radius: 0.25em;
+                color: blue;
+                font-size: 1.1em;
+            }
+
+            header nav li a[href]:not(:hover) {
+                text-decoration: none;
+            }
+
+            header nav li a[data-current="current item"] {
+                background-color: white;
             }
         </style>
+
     </head>
     <body>
-        <div id="side_panel"></div>
-        <div id="map"></div>
-        <div id="chartdiv"></div>
+
+        <header>
+			<em>
+				<a href="{{ '/' | url }}">{{ metadata.title }}</a>
+			</em>
+			{% include "components/nav.njk" %}
+		</header>
+        <main>
+            <div id="side_panel"></div>
+            <div id="map"></div>
+            <div id="chartdiv"></div>
+        </main>
+
         <script>
         var transformRequest = (url, resourceType) => {
           var isMapboxRequest =
@@ -147,17 +247,28 @@ section: map
                                 .setLngLat([currLng, currLat])
                                 .setPopup(popup)
                                 .addTo(map);
+
+                            function flyToLocation(currentFeature) {
+                                map.flyTo({
+                                center: [currLng, currLat],
+                                zoom: 15
+                                });
+                            }
                            
                             popups[i] = popup;
 
                             div.addEventListener("click", e => {
                                 console.log(e.target.getAttribute("id"),popups[e.target.getAttribute("id")]);
                                 popups[e.target.getAttribute("id")].addTo(map);
+                                document.getElementById(e.target.getAttribute("id")).style.background = "#fff";
+                                document.getElementById(e.target.getAttribute("id")).style.background = "#ebfaeb";
+                                flyToLocation(mapboxgl.Marker);
                             });
                            
                             currLat = 0;
                             currLng = 0;              
                         }
+
                 });
 
                 am4core.ready(function() {
@@ -208,5 +319,8 @@ section: map
         });
 
     </script>
+
+    <script>{{ js | jsmin | safe }}</script>
+
 </body>
 </html>
