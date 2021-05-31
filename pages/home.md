@@ -8,6 +8,31 @@ eleventyNavigation:
   order: 0
 ---
 
+<style>
+  .videoWrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+  }
+  .videoWrapper video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  main {
+    padding: 0;
+  }
+</style>
+
+<div class="videoWrapper">
+  <video width="560" height="349" autoplay loop controls>
+    <source src="https://res.cloudinary.com/dnf1xnzg3/video/upload/v1622422786/grid_solo_REPEAT-2-TIMES_ybuvp3.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+  </video>
+</div>
+
 # Welcome
 
 A website and blog showcasing data from Enviroschool Southland survey of microplastics in streams and coastal waterways.
