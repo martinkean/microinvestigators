@@ -1,5 +1,5 @@
 ---
-title: About us
+
 metaDescription: This is a sample meta description. If one is not present in your page/post's front matter, the default metadata.desciption will be used instead.
 date: 2017-01-01T00:00:00.000Z
 permalink: /about/index.html
@@ -8,27 +8,52 @@ eleventyNavigation:
   order: 1
 ---
 
-Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
+ <section class="text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">About</h1>
+        <p class="lead text-muted">Christine Liang, at SIT, and Donna Peterson, the Senior Waste Officer at WasteNet Southland, have collaborated to gather data on microplastics. This project has been built to include school children from EnviroSchools Southland, ages ranging from primary, intermediate, and high school students. MicroInvestigators are the school students who, as part of their education, are highlighting awareness of plastic pollution in local waterways and coastal areas.</p>
+      </div>
+    </div>
+  </section>
+          
+  <section class="text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Aim</h1>
+        <p class="lead text-muted">Our aim is to raise awareness about microplastics in waterways, to involve all sections of education and to make change for the sustainability and life of the waterways.</p>
+      </div>
+    </div>
+  </section>
+          
+  <section class="text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Team</h1>
+      </div>
+    </div>
+  </section>
+          
+<div class="container marketing">
 
-Add a few line breaks in here to test:-
-Capitalize  
-on  
-low  
-hanging  
-fruit
+  <div class="row">
+      <div class="col-lg-4">
+        <img class="team-image rounded-circle bd-placeholder-img" src="/_includes/assets/img/christine-resize.jpg"/>
 
-## Our services
+  <h3>Christine Liang</h3>
+        <p>Some representative placeholder content for the three columns of text below the carousel. This is the first column.</p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+        <img class="team-image rounded-circle bd-placeholder-img" src="/_includes/assets/img/IMG_2661.jpg"/>
 
-Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal that has evolved from generation X is on the runway heading towards a streamlined cloud solution. User generated content in real-time will have multiple touchpoints for offshoring. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
+  <h3>Donna Peterson</h3>
+        <p>Another exciting bit of representative placeholder content. This time, we've moved on to the second column.</p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+        <img class="team-image rounded-circle bd-placeholder-img" src="/_includes/assets/img/IMG_2680.jpg"/>
 
-### Blue-sky thinking
-
-Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
-
-#### Management frameworks
-
-Podcasting operational change management inside of workflows to establish a framework. Taking seamless key performance indicators offline to maximise the long tail. Keeping your eye on the ball while performing a deep dive on the start-up mentality to derive convergence on cross-platform integration. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
-
-##### Regulatory convergence
-
-Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
+  <h3>Person 3</h3>
+        <p>And lastly this, the third column of representative placeholder content.</p>
+      </div><!-- /.col-lg-4 -->
+    </div><!-- /.row -->
+          </div>

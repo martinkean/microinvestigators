@@ -26,19 +26,20 @@ eleventyNavigation:
   }
 </style>
 
+# Welcome
+
 <div class="videoWrapper">
-  <video width="560" height="349" autoplay loop controls>
-    <source src="https://res.cloudinary.com/dnf1xnzg3/video/upload/v1622422786/grid_solo_REPEAT-2-TIMES_ybuvp3.mp4" type="video/mp4">
+  <video width="1092" height="1028" autoplay loop controls poster="/_includes/assets/img/video-poster.png">
+    <source src="https://res.cloudinary.com/dnf1xnzg3/video/upload/v1622507979/MicroInvestigators/Long_Form_Web_Video_Hi_Bitrate_kh04wv.mp4" type="video/mp4">
   Sorry! Your browser does not support the video tag.
   </video>
 </div>
-
-# Welcome
-
-A website and blog showcasing data from Enviroschool Southland survey of microplastics in streams and coastal waterways.
-
-This template for building a simple blog website is developed using the [Eleventy static site generator](https://www.11ty.io), with deployment to [Netlify](https://www.netlify.com).
-
-Includes [Netlify CMS](https://www.netlifycms.org) for WYSIWYG content editing, and [Netlify Forms](https://www.netlify.com/docs/form-handling) for processing your site's form data, and Mapbox for display data on maps.
-
-And...
+      
+<section class="text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Mission Statement</h1>
+        <p class="lead text-muted">Southland schools need to become educated and aware of environmental issues of microplastics in the local waterways or Murihiku, because this will enable action to be taken within the community, based off the data, creating positive environmental change.</p>
+      </div>
+    </div>
+  </section>

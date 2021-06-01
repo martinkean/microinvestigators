@@ -30,8 +30,8 @@ section: map
                     grid-template-rows: auto 1fr auto;
                     background-color: var(--background); }
             main { margin: 0; }
-            #map { position: absolute; top: 120px; bottom: 0; width: 100%; }
-            #side_panel { position:fixed; top: 120px; width:30%; background:white; height:100vh; z-index: 2; overflow-y:scroll }
+            #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+            #side_panel { position:fixed; top: 0x; width:30%; background:white; height:100vh; z-index: 2; overflow-y:scroll }
             .side_item{ padding:30px;border-bottom:1px solid black;cursor:pointer; }
             .side_item:hover { background:#eee; }
             .side_header { font-weight:bold; color:green; }
@@ -256,7 +256,6 @@ section: map
                                 popups[e.target.getAttribute("id")].addTo(map);
                                 document.getElementById(e.target.getAttribute("id")).style.background = "#fff";
                                 document.getElementById(e.target.getAttribute("id")).style.background = "#ebfaeb";
-                                flyToLocation(mapboxgl.Marker);
                             });
                            
                             currLat = 0;
