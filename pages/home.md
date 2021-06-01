@@ -29,7 +29,7 @@ eleventyNavigation:
 <div class="videoWrapper">
   <video width="560" height="349" autoplay loop controls>
     <source src="https://res.cloudinary.com/dnf1xnzg3/video/upload/v1622422786/grid_solo_REPEAT-2-TIMES_ybuvp3.mp4" type="video/mp4">
-  Your browser does not support the video tag.
+  Sorry! Your browser does not support the video tag.
   </video>
 </div>
 
