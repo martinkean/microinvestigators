@@ -1,135 +1,319 @@
 ---
 section: map
 ---
+
 <!doctype html>
-<html>      
+<html>
     <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{{ title }}</title>
+        <meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Map</title>
         <meta name="description" content="">
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
         <link href="https://api.mapbox.com/mapbox-gl-js/v2.3.0-beta.1/mapbox-gl.css" rel="stylesheet">
         <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.0-beta.1/mapbox-gl.js"></script>
         <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+        <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+        <script src="https://cdn.amcharts.com/lib/4/themes/dataviz.js"></script>
+        <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
         <style>
-            body { margin: 0; padding: 0; font-family: 'Work Sans', sans-serif; }
+            :root {
+            --primary: blue;
+            --secondary: white;
+            --background: #d2e0f7;
+            }
+
+            body { margin: 0; padding: 0; font-family: 'Work Sans', sans-serif; display: grid;
+                    height: 100vh;
+                    grid-template-rows: auto 1fr auto;
+                    background-color: var(--background); }
+            main { margin: 0; }
             #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-            #side_panel{ position:fixed;width:30%;background:white;height:100vh;z-index: 2; }
+            #side_panel { position:fixed; top: 0x; width:30%; background:white; height:100vh; z-index: 2; overflow-y:scroll }
             .side_item{ padding:30px;border-bottom:1px solid black;cursor:pointer; }
-            .side_item:hover{ background:#eee; }
+            .side_item:hover { background:#eee; }
             .side_header { font-weight:bold; color:green; }
             .mapboxgl-popup-content h2 { font-weight: 700; font-size: 2em; color: green; margin: 0 0 10px 0; }
             .popup-label { font-weight: 600; color: green; }
             .popup-data { font-weight: 400; color: #333; }
+            .popup_image { width: 100%; }
             .mapboxgl-popup-content {
-              padding: 20px;
-              border-radius: 6px;
-              min-width: 140%;
-              border: 8px solid #cfe6cf;
+                padding: 20px;
+                border-radius: 6px;
+                width: 300px;
+                border: 8px solid #cfe6cf;
+            }
+            .mapboxgl-popup-close-button {
+                right: 5px;
+                top: 5px;
+                width: 20px;
+                height: 20px;
+                color: green;
+            }
+            .mapboxgl-popup-anchor-top .mapboxgl-popup-tip { border-bottom-color: #cfe6cf; }
+            #chartdiv {
+                position:fixed;
+                background:white;
+                bottom:0;
+                right:0;
+                width: 70%;
+                height: 460px;
+            }
+            
+            a[href],
+                a[href]:visited {
+                }
+
+                a[href]:not(:hover) {
+                text-decoration: none;
+                }
+
+            .pagetesthead {
+                color: cornflowerblue;
+                }
+
+            /* Header Logo (style as h2) */
+                header > em {
+                display: block;
+                margin: 1.4em 0;
+                font-style: normal;
+            }
+
+            header em a {
+                color: blue;
+                font-size: 2.4em;
+                font-weight: 600;
+            }
+
+            header a:hover {
+                text-decoration: none;
+            }
+
+            header {
+                margin-left: 20px;
+                background-color: var(--background); }
+                min-height: 120px;
+                margin-top: 1.4em;
+            }
+
+            /* Header Nav */
+                header nav ul {
+                padding: 0;
+                list-style: none;
+            }
+
+            header nav ul {
+                padding-inline-start: 0;
+            }
+
+            header nav ul :first-child {
+                margin-left: 0;
+            }
+
+            header nav li {
+                display: inline-block;
+                margin: 0 0.25em;
+            }
+
+            header nav li a {
+                padding: 0.25em 0.5em;
+                border-radius: 0.25em;
+                color: blue;
+                font-size: 1.1em;
+            }
+
+            header nav li a[href]:not(:hover) {
+                text-decoration: none;
+            }
+
+            header nav li a[data-current="current item"] {
+                background-color: white;
             }
         </style>
+
     </head>
     <body>
-        <div id="side_panel"></div>
-        <div id="map"></div>
- 
+
+        <main>
+            <div id="side_panel"></div>
+            <div id="map"></div>
+            <div id="chartdiv"></div>
+        </main>
+
         <script>
+        var transformRequest = (url, resourceType) => {
+          var isMapboxRequest =
+            url.slice(8, 22) === "api.mapbox.com" ||
+            url.slice(10, 26) === "tiles.mapbox.com";
+          return {
+            url: isMapboxRequest
+              ? url.replace("?", "?pluginName=sheetMapper&")
+              : url
+          };
+        };
 
-            var transformRequest = (url, resourceType) => {
-              var isMapboxRequest =
-                url.slice(8, 22) === "api.mapbox.com" ||
-                url.slice(10, 26) === "tiles.mapbox.com";
-              return {
-                url: isMapboxRequest
-                  ? url.replace("?", "?pluginName=sheetMapper&")
-                  : url
-              };
-            };
+        mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGlua2VhbiIsImEiOiJjazJ2Zmt3cDgwNG52M2JxbXZ5OHVmNGVrIn0.83FDGF7SZfT3gqCXT1TuuQ';
+        var map = new mapboxgl.Map({
+          container: 'map', // container id
+          style: "mapbox://styles/martinkean/ck2vfpcsp0j7g1cqxh3p3lv00",
+          center: [168.6842137,-46.1754413], // starting position [lng, lat] -45.770090, 168.984942, Awatere, Southland
+          zoom: 9, // starting zoom
+          transformRequest: transformRequest
+        });
 
-            mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGlua2VhbiIsImEiOiJjazJ2Zmt3cDgwNG52M2JxbXZ5OHVmNGVrIn0.83FDGF7SZfT3gqCXT1TuuQ';
-            var map = new mapboxgl.Map({
-              container: 'map', // container id
-              style: "mapbox://styles/martinkean/ck2vfpcsp0j7g1cqxh3p3lv00",
-              center: [168.6842137,-46.1754413], // starting position [lng, lat] -45.770090, 168.984942, Awatere, Southland
-              zoom: 9, // starting zoom
-              transformRequest: transformRequest
-            });
+        map.on('load', function () {
+            fetch("https://spreadsheets.google.com/feeds/cells/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/1/public/full?alt=json")
+            .then(res => res.json())
+            .then(data => {
+                let headerRow = "1";
+                let currRow = "1";
+                let headerFields = [];
+                let dataFields = [];
+                let currLocation = "";
 
-            map.on('load', function () {
-                fetch("https://spreadsheets.google.com/feeds/cells/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/1/public/full?alt=json")
-                .then(res => res.json())
-                .then(data => {
-                    let headerRow = "1";
-                    let currRow = "1";
-                    let headerFields = [];
-                    let dataFields = [];
+                let side_fields = ["Date","Location","Collected by"];
 
-                    let side_fields = ["Date","Location","Collected by"];
+                let currLat = 0;
+                let currLng = 0;
+                let currObj = {};
+                let popups = {};
 
-                    let currLat = 0;
-                    let currLng = 0;
-                    let currObj = {};
-                    let popups = {};
+                let popup_fields = []
 
-                    let div = document.createElement('div');  
+                let div = document.createElement('div'); 
+                
+                let chart_data = [];
 
-                    data.feed.entry.forEach((item,i) => {         
-                    
-                        if(item["gs$cell"]["row"] == headerRow)                                        
-                            headerFields.push(item["gs$cell"]["inputValue"])                                
-                        else if(item["gs$cell"]["row"] != currRow)
+                data.feed.entry.forEach((item,i) => {                       
+                    if(item["gs$cell"]["row"] == headerRow)                                        
+                        headerFields.push(item["gs$cell"]["inputValue"])                                
+                    else
+                    {
+                        if(item["gs$cell"]["row"] != currRow)
                         {   
                             currRow = item["gs$cell"]["row"];             
                             currObj = {};                                      
                             div = document.createElement('div');                                                                      
                             div.classList.add("side_item");                            
                             document.querySelector("#side_panel").append(div);
-                        } 
-                        else 
-                        {
-                            currObj[`${headerFields[parseInt(item["gs$cell"]["col"])-1]}`] = `${item["gs$cell"]["inputValue"]}`;
-                            if(side_fields.indexOf(headerFields[parseInt(item["gs$cell"]["col"])-1]) != -1)
-                                div.innerHTML += `<span class="side_header">${headerFields[parseInt(item["gs$cell"]["col"])-1]}</span> ${item["gs$cell"]["inputValue"]}<br/>`;
+                        }
 
-                            if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Lat")
-                                currLat = item["gs$cell"]["inputValue"]
-                            if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Long")
-                                currLng = item["gs$cell"]["inputValue"]
-                        }                            
+                        currObj[`${headerFields[parseInt(item["gs$cell"]["col"])-1]}`] = `${item["gs$cell"]["inputValue"]}`;
+                        if(side_fields.indexOf(headerFields[parseInt(item["gs$cell"]["col"])-1]) != -1)
+                            div.innerHTML += `<span class="side_header">${headerFields[parseInt(item["gs$cell"]["col"])-1]}</span> ${item["gs$cell"]["inputValue"]}<br/>`;
+
+                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Lat")
+                            currLat = item["gs$cell"]["inputValue"]
+                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Long")
+                            currLng = item["gs$cell"]["inputValue"]       
+                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Location")
+                            currLocation = item["gs$cell"]["inputValue"]   
                         
-                        if((data.feed.entry[i+1] && data.feed.entry[i+1]["gs$cell"]["row"] != currRow) || !data.feed.entry[i+1])
-                            if(currLat != 0 && currLng != 0)
-                            {                                          
-                                let popup = new mapboxgl.Popup();
-                                let popup_html = "<h2>Microplastics count</h2>";
-                                Object.keys(currObj).forEach(k => {
-                                    popup_html += `<span class="popup-label">${k}: </span><span class="popup-data">${currObj[k]}</span></br>`;
+                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Fibre count"){
+                            let obj = {};
+                            obj["field"] = currLocation;
+                            obj["value"] = item["gs$cell"]["inputValue"];
+                            chart_data.push(obj); 
+                        }
+                            
+                    }                          
+                    
+                    if((data.feed.entry[i+1] && data.feed.entry[i+1]["gs$cell"]["row"] != currRow) || !data.feed.entry[i+1])
+                        if(currLat != 0 && currLng != 0)
+                        {                                          
+                            let popup = new mapboxgl.Popup();
+                            let popup_html = `<h2>${currObj['Location']}</h2>`;
+                            Object.keys(currObj).forEach((k,i) => {
+                                if(i < 10){
+                                    if(k != "Image")
+                                        popup_html += `<span class="popup-label">${k}: </span><span class="popup-data">${currObj[k]}</span></br>`;
+                                    else
+                                        popup_html += `<img class="popup_image" src="${currObj[k]}" />`;
+                                }
+                            });
+                            popup.setHTML(popup_html);
+
+                            div.setAttribute("id",i);                                
+
+                            let marker = new mapboxgl.Marker()
+                                .setLngLat([currLng, currLat])
+                                .setPopup(popup)
+                                .addTo(map);
+
+                            function flyToLocation(currentFeature) {
+                                map.flyTo({
+                                center: [currLng, currLat],
+                                zoom: 15
                                 });
-                                popup.setHTML(popup_html);
-
-                                div.setAttribute("id",i);                                
-
-                                let marker = new mapboxgl.Marker()
-                                    .setLngLat([currLng, currLat])
-                                    .setPopup(popup)
-                                    .addTo(map);
-
-                                popups[i] = popup;
-
-                                div.addEventListener("click", function(){
-                                    popups[div.getAttribute("id")].addTo(map);
-                                });
-
-                                currLat = 0;
-                                currLng = 0;              
                             }
-                    });
-                });                
-            });
+                           
+                            popups[i] = popup;
 
-        </script>
- 
-    </body>
+                            div.addEventListener("click", e => {
+                                console.log(e.target.getAttribute("id"),popups[e.target.getAttribute("id")]);
+                                popups[e.target.getAttribute("id")].addTo(map);
+                                document.getElementById(e.target.getAttribute("id")).style.background = "#fff";
+                                document.getElementById(e.target.getAttribute("id")).style.background = "#ebfaeb";
+                            });
+                           
+                            currLat = 0;
+                            currLng = 0;              
+                        }
+
+                });
+
+                am4core.ready(function() {
+
+                    // Themes begin
+                    am4core.useTheme(am4themes_dataviz);
+                    // Themes end
+
+                    var chart = am4core.create("chartdiv", am4charts.XYChart);
+                    chart.data = chart_data;
+
+                    chart.padding(40, 40, 40, 40);
+
+                    var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+                    categoryAxis.renderer.grid.template.location = 0;
+                    categoryAxis.dataFields.category = "field";
+                    categoryAxis.renderer.minGridDistance = 60;
+                    categoryAxis.renderer.inversed = true;
+                    categoryAxis.renderer.grid.template.disabled = true;
+
+                    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                    valueAxis.min = 0;
+                    valueAxis.extraMax = 0.1;
+
+                    var series = chart.series.push(new am4charts.ColumnSeries());
+                    series.dataFields.categoryX = "field";
+                    series.dataFields.valueY = "value";
+                    series.tooltipText = "{valueY.value}"
+                    series.columns.template.strokeOpacity = 0;
+                    series.columns.template.column.cornerRadiusTopRight = 10;
+                    series.columns.template.column.cornerRadiusTopLeft = 10;
+                    var labelBullet = series.bullets.push(new am4charts.LabelBullet());
+                    labelBullet.label.verticalCenter = "bottom";
+                    labelBullet.label.dy = -10;
+                    labelBullet.label.text = "{values.valueY.workingValue.formatNumber('#.')}";
+
+                    chart.zoomOutButton.disabled = true;
+
+                    // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+                    series.columns.template.adapter.add("fill", function (fill, target) {
+                        return chart.colors.getIndex(target.dataItem.index);
+                    });               
+
+                    categoryAxis.sortBySeries = series;
+
+                }); // end am4core.ready()       
+            });                
+        });
+
+    </script>
+
+    <script>{{ js | jsmin | safe }}</script>
+
+</body>
 </html>
