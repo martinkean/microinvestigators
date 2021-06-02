@@ -2,12 +2,11 @@
 layout: layouts/results.njk
 metaDescription: Results of MicroInvestigator counts
 date: 2017-01-01
-permalink: /pagetest/index.html
+permalink: /results/index.html
 eleventyNavigation:
   key: Results
   order: 1
 ---
-
 
   <section class="text-center container">
     <div class="row padding">
@@ -118,5 +117,3 @@ eleventyNavigation:
       </div>
     </div>
   </div>
-
-
