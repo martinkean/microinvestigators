@@ -8,7 +8,6 @@ eleventyNavigation:
   order: 0
 ---
 
-
 <style>
   .videoWrapper {
     position: relative;
@@ -28,7 +27,7 @@ eleventyNavigation:
 </style>
 
 <div class="videoWrapper">
-  <video width="560" height="349" autoplay loop controls>
+  <video width="560" height="349" autoplay loop>
     <source src="https://res.cloudinary.com/dnf1xnzg3/video/upload/v1622507979/MicroInvestigators/Long_Form_Web_Video_Hi_Bitrate_kh04wv.mp4" type="video/mp4">
   Sorry! Your browser does not support the video tag.
   </video>
