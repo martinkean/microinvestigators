@@ -10,7 +10,7 @@ eleventyNavigation:
 
 
   <section class="text-center container">
-    <div class="row py-lg-5">
+    <div class="row padding">
       <div class="col-lg-6 col-md-8 mx-auto">
         <h1 class="fw-light">Data</h1>
         <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
@@ -46,7 +46,7 @@ eleventyNavigation:
           <a href="#" class="stretched-link">Continue reading</a>
         </div>
         <div class="col-auto d-none d-lg-block">
-         
+         <img class="card-image" src="/_includes/assets/img/IMG_2591-resize.jpg"/>
 
   </div>
       </div>
@@ -65,7 +65,7 @@ eleventyNavigation:
           <a href="#" class="stretched-link">Continue reading</a>
         </div>
         <div class="col-auto d-none d-lg-block">
-          
+          <img class="card-image" src="/_includes/assets/img/IMG_2650-resize.jpg"/>
   </div>
       </div>
     </div>
@@ -80,7 +80,7 @@ eleventyNavigation:
           <a href="#" class="stretched-link">Continue reading</a>
         </div>
         <div class="col-auto d-none d-lg-block">
-
+<img class="card-image" src="/_includes/assets/img/IMG_2573-resize.jpg"/>
   </div>
       </div>
     </div>
@@ -98,6 +98,7 @@ eleventyNavigation:
           <a href="#" class="stretched-link">Continue reading</a>
         </div>
         <div class="col-auto d-none d-lg-block">
+        <img class="card-image" src="/_includes/assets/img/IMG_2516-resize.jpg"/>
   </div>
       </div>
     </div>
@@ -112,7 +113,7 @@ eleventyNavigation:
           <a href="#" class="stretched-link">Continue reading</a>
         </div>
         <div class="col-auto d-none d-lg-block">
-
+<img class="card-image" src="/_includes/assets/img/IMG_2484-resize.jpg"/>
   </div>
       </div>
     </div>
