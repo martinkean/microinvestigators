@@ -1,0 +1,26 @@
+<head>
+
+    <meta charset="utf-8">
+    <link rel="dns-prefetch" href="https://identity.netlify.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{ renderData.title or title or metadata.title }}</title>
+    <meta name="description" content="{{ metaDescription or renderData.metaDescription or metadata.description }}">
+    <script async src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    {% set css %}
+        {% include "assets/css/inline.css" %}
+        {% include "assets/css/custom.css" %}
+    {% endset %}
+    <style>{{ css | cssmin | safe }}</style>
+    {% set js %}
+        {% include "assets/js/inline.js" %}
+    {% endset %}
+    <script>{{ js | jsmin | safe }}</script>
+    
+</head>
