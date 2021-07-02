@@ -5,14 +5,60 @@
 
 	<body>
 
+		<style>
+			main{
+				display:grid;
+				grid-template-columns: 1fr 1fr;
+			}
+			.card {		
+				height: 200px;
+				margin: 40px!important;
+				padding: 40px;
+				background-color: green;
+			}
+		</style>
+
 		<header>
 			<img class="brand-logo" src="/_includes/assets/img/brand-logo-2.svg"/>
 			{% include "components/nav.njk" %}
 		</header>
 
 		<main>
-			{{ layoutContent | safe }}
+
 		</main>
+
+		<script>
+		    let side_fields = ["Date","Location","Collected by"];
+
+			let headerRow = "1";
+            let currRow = "1";
+            let headerFields = [];
+
+			fetch("https://spreadsheets.google.com/feeds/cells/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/1/public/full?alt=json")
+            .then(res => res.json())
+            .then(data => {
+				let main = document.querySelector("main");
+				let card = document.createElement("div");
+				data.feed.entry.forEach((item,i) => {       
+					if(item["gs$cell"]["row"] == headerRow)                                        
+                        headerFields.push(item["gs$cell"]["inputValue"])                                
+                    else
+                    {
+                        if(item["gs$cell"]["row"] != currRow)
+                        {   
+                            currRow = item["gs$cell"]["row"];             
+							card = document.createElement("div");
+							card.classList.add("card");
+							main.append(card);
+						}
+
+						if(side_fields.indexOf(headerFields[parseInt(item["gs$cell"]["col"])-1]) != -1)
+                        	card.innerHTML += `${item["gs$cell"]["inputValue"]}`;
+
+					}
+				});                
+			});
+		</script>
 
 		{% include "components/footer.njk" %}
 

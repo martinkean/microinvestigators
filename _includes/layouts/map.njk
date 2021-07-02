@@ -1,10 +1,8 @@
 ---
 section: map
+layout: layouts/base.njk
 ---
 
-<!doctype html>
-<html>
-    <head>
         <meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Map</title>
         <meta name="description" content="">
@@ -29,11 +27,14 @@ section: map
                     height: 100vh;
                     grid-template-rows: auto 1fr auto;
                     background-color: var(--background); }
-            main { margin: 0; }
-            #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-            #side_panel { position:fixed; top: 0x; width:30%; background:white; height:100vh; z-index: 2; overflow-y:scroll }
+            main { margin: 0;position:relative;height:100vh;box-sizing:border-box;padding:0 }
+            #map { position: absolute; top: 0; bottom: 0; left:0;right:0 }
+            #side_panel { position:absolute; top: 0; width:30%; background:white; height:100vh; z-index: 2; overflow-y:scroll }
             .side_item{ padding:30px;border-bottom:1px solid black;cursor:pointer; }
             .side_item:hover { background:#eee; }
+            .side_item.selected{
+                background:#ebfaeb;
+            }
             .side_header { font-weight:bold; color:green; }
             .mapboxgl-popup-content h2 { font-weight: 700; font-size: 2em; color: green; margin: 0 0 10px 0; }
             .popup-label { font-weight: 600; color: green; }
@@ -93,7 +94,7 @@ section: map
 
             header {
                 margin-left: 20px;
-                background-color: var(--background); }
+                background-color: var(--background); 
                 min-height: 120px;
                 margin-top: 1.4em;
             }
@@ -233,6 +234,18 @@ section: map
                                 }
                             });
                             popup.setHTML(popup_html);
+                            popup.id = i;
+
+                            popup.on("open",(e) => {
+                                document.querySelectorAll(".side_item").forEach(x => {
+                                    x.classList.remove("selected");
+                                })
+                                document.getElementById(`${e.target.id}`).classList.add("selected");
+                            })
+
+                            popup.on("close",(e) => {
+                                document.getElementById(`${e.target.id}`).classList.remove("selected");
+                            })
 
                             div.setAttribute("id",i);                                
 
@@ -251,10 +264,20 @@ section: map
                             popups[i] = popup;
 
                             div.addEventListener("click", e => {
-                                console.log(e.target.getAttribute("id"),popups[e.target.getAttribute("id")]);
-                                popups[e.target.getAttribute("id")].addTo(map);
-                                document.getElementById(e.target.getAttribute("id")).style.background = "#fff";
-                                document.getElementById(e.target.getAttribute("id")).style.background = "#ebfaeb";
+                                if(e.target.classList.contains("selected"))
+                                {
+                                    document.getElementById(e.target.getAttribute("id")).classList.remove("selected");
+                                    popups[e.target.getAttribute("id")].remove();
+                                }
+                                else
+                                {
+                                    document.querySelectorAll(".side_item").forEach(x => {
+                                        popups[x.getAttribute("id")].remove();
+                                        x.classList.remove("selected")
+                                    })
+                                    popups[e.target.getAttribute("id")].addTo(map);
+                                    document.getElementById(e.target.getAttribute("id")).classList.add("selected");
+                                }
                             });
                            
                             currLat = 0;
@@ -262,7 +285,7 @@ section: map
                         }
 
                 });
-
+/*
                 am4core.ready(function() {
 
                     // Themes begin
@@ -306,13 +329,10 @@ section: map
 
                     categoryAxis.sortBySeries = series;
 
-                }); // end am4core.ready()       
+                }); // end am4core.ready()       */
             });                
         });
 
     </script>
 
     <script>{{ js | jsmin | safe }}</script>
-
-</body>
-</html>
