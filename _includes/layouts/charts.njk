@@ -1,10 +1,8 @@
 ---
 section: charts
+layout: layouts/base.njk
 ---
 
-<!doctype html>
-<html>
-    <head>
         <meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Map</title>
         <meta name="description" content="">
@@ -30,37 +28,6 @@ section: charts
                     grid-template-rows: auto 1fr auto;
                     background-color: var(--background); }
             main { margin: 0; }
-            #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-            #side_panel { position:fixed; top: 0x; width:30%; background:white; height:100vh; z-index: 2; overflow-y:scroll }
-            .side_item{ padding:30px;border-bottom:1px solid black;cursor:pointer; }
-            .side_item:hover { background:#eee; }
-            .side_header { font-weight:bold; color:green; }
-            .mapboxgl-popup-content h2 { font-weight: 700; font-size: 2em; color: green; margin: 0 0 10px 0; }
-            .popup-label { font-weight: 600; color: green; }
-            .popup-data { font-weight: 400; color: #333; }
-            .popup_image { width: 100%; }
-            .mapboxgl-popup-content {
-                padding: 20px;
-                border-radius: 6px;
-                width: 300px;
-                border: 8px solid #cfe6cf;
-            }
-            .mapboxgl-popup-close-button {
-                right: 5px;
-                top: 5px;
-                width: 20px;
-                height: 20px;
-                color: green;
-            }
-            .mapboxgl-popup-anchor-top .mapboxgl-popup-tip { border-bottom-color: #cfe6cf; }
-            #chartdiv {
-                position:fixed;
-                background:white;
-                bottom:0;
-                right:0;
-                width: 70%;
-                height: 460px;
-            }
             
             a[href],
                 a[href]:visited {
@@ -131,6 +98,10 @@ section: charts
             header nav li a[data-current="current item"] {
                 background-color: white;
             }
+
+            #chartdiv{
+                height:500px;
+            }
         </style>
 
     </head>
@@ -138,32 +109,11 @@ section: charts
 
         <main>
             <div id="side_panel"></div>
-            <div id="map"></div>
             <div id="chartdiv"></div>
         </main>
 
         <script>
-        var transformRequest = (url, resourceType) => {
-          var isMapboxRequest =
-            url.slice(8, 22) === "api.mapbox.com" ||
-            url.slice(10, 26) === "tiles.mapbox.com";
-          return {
-            url: isMapboxRequest
-              ? url.replace("?", "?pluginName=sheetMapper&")
-              : url
-          };
-        };
 
-        mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGlua2VhbiIsImEiOiJjazJ2Zmt3cDgwNG52M2JxbXZ5OHVmNGVrIn0.83FDGF7SZfT3gqCXT1TuuQ';
-        var map = new mapboxgl.Map({
-          container: 'map', // container id
-          style: "mapbox://styles/martinkean/ck2vfpcsp0j7g1cqxh3p3lv00",
-          center: [168.6842137,-46.1754413], // starting position [lng, lat] -45.770090, 168.984942, Awatere, Southland
-          zoom: 9, // starting zoom
-          transformRequest: transformRequest
-        });
-
-        map.on('load', function () {
             fetch("https://spreadsheets.google.com/feeds/cells/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/1/public/full?alt=json")
             .then(res => res.json())
             .then(data => {
@@ -172,8 +122,6 @@ section: charts
                 let headerFields = [];
                 let dataFields = [];
                 let currLocation = "";
-
-                let side_fields = ["Date","Location","Collected by"];
 
                 let currLat = 0;
                 let currLng = 0;
@@ -201,8 +149,7 @@ section: charts
                         }
 
                         currObj[`${headerFields[parseInt(item["gs$cell"]["col"])-1]}`] = `${item["gs$cell"]["inputValue"]}`;
-                        if(side_fields.indexOf(headerFields[parseInt(item["gs$cell"]["col"])-1]) != -1)
-                            div.innerHTML += `<span class="side_header">${headerFields[parseInt(item["gs$cell"]["col"])-1]}</span> ${item["gs$cell"]["inputValue"]}<br/>`;
+
 
                         if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Lat")
                             currLat = item["gs$cell"]["inputValue"]
@@ -220,47 +167,7 @@ section: charts
                             
                     }                          
                     
-                    if((data.feed.entry[i+1] && data.feed.entry[i+1]["gs$cell"]["row"] != currRow) || !data.feed.entry[i+1])
-                        if(currLat != 0 && currLng != 0)
-                        {                                          
-                            let popup = new mapboxgl.Popup();
-                            let popup_html = `<h2>${currObj['Location']}</h2>`;
-                            Object.keys(currObj).forEach((k,i) => {
-                                if(i < 10){
-                                    if(k != "Image")
-                                        popup_html += `<span class="popup-label">${k}: </span><span class="popup-data">${currObj[k]}</span></br>`;
-                                    else
-                                        popup_html += `<img class="popup_image" src="${currObj[k]}" />`;
-                                }
-                            });
-                            popup.setHTML(popup_html);
-
-                            div.setAttribute("id",i);                                
-
-                            let marker = new mapboxgl.Marker()
-                                .setLngLat([currLng, currLat])
-                                .setPopup(popup)
-                                .addTo(map);
-
-                            function flyToLocation(currentFeature) {
-                                map.flyTo({
-                                center: [currLng, currLat],
-                                zoom: 15
-                                });
-                            }
-                           
-                            popups[i] = popup;
-
-                            div.addEventListener("click", e => {
-                                console.log(e.target.getAttribute("id"),popups[e.target.getAttribute("id")]);
-                                popups[e.target.getAttribute("id")].addTo(map);
-                                document.getElementById(e.target.getAttribute("id")).style.background = "#fff";
-                                document.getElementById(e.target.getAttribute("id")).style.background = "#ebfaeb";
-                            });
-                           
-                            currLat = 0;
-                            currLng = 0;              
-                        }
+                    
 
                 });
 
@@ -309,11 +216,7 @@ section: charts
 
                 }); // end am4core.ready()       
             });                
-        });
 
     </script>
 
     <script>{{ js | jsmin | safe }}</script>
-
-</body>
-</html>
