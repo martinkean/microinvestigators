@@ -3,6 +3,11 @@ section: map
 layout: layouts/base.njk
 ---
 
+{% set css %}
+    {% include "assets/css/inline.css" %}
+    {% include "assets/css/custom.css" %}
+  {% endset %}
+  
         <meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Map</title>
         <meta name="description" content="">
