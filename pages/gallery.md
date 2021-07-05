@@ -1,8 +1,4 @@
 ---
-pagination:
-  data: posts
-  size: 1
-  alias: posts
 layout: layouts/base.njk
 title: Gallery
 date: 2016-01-01T00:00:00.000Z
@@ -11,7 +7,7 @@ eleventyNavigation:
   order: 1
 ---
 
-<h3>{{ posts.title.rendered }}</h3>
+<h1>Gallery</h1>
 <div class="gallery-grid">
-      {{ posts.content.rendered | safe }}
+      <!-- {{ posts.content.rendered | safe }} -->
 </div>
