@@ -12,6 +12,10 @@ tags:
 ---
 Microplastics research in NZ is quite a new thing, and there is even less known about microplastics in NZ freshwater rivers. However, there is a lot of potential for NZ to be a leading example in the widespread effort to quantify, monitor, and subsequently mitigate the spread of microplastics in the environment.
 
-![A sample inlined image](https://source.unsplash.com/random/600x400)
+![Microplastics](/static/img/microplastics_sit.jpg)
 
-Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
+What research is out there? The University of Auckland did a study about Auckland region waterways and a study from University of Otago looked at waterways in 5 major NZ cities. Environment Southland commissioned a report by Cawthron Institute on the risks of microplastics in Southland and other councils are also looking into this risk. Crown research institutes like Scion, ESR, and NIWA are also interested in emerging contaminants such as microplastics. 
+
+However, it’s important to look at other regions in NZ beyond the big cities in order to get the full picture of microplastics pollution in waterways. Since there are a lot of rivers and streams and creeks out there, we believe that citizen science is the best approach towards this immense effort. Crowd-sourced citizen science data like the data on this website could help the big research institutes identify ‘hotspots’ of microplastic pollution for further research or management. 
+
+Be a citizen scientist and join us to investigate microplastics in your local river! [Get in touch now!](https://microinvestigators.nz/contact/)
