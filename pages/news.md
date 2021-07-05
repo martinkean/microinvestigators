@@ -1,7 +1,7 @@
 ---
 layout: layouts/news.njk
 title: News
-metaDescription: A sample Blog page listing various posts and authors.
+metaDescription: Recent news!
 date: 2017-01-01
 permalink: /news/index.html
 eleventyNavigation:

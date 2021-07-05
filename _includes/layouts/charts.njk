@@ -55,110 +55,105 @@ layout: layouts/base.njk
         </main>
 
         <script>
+                fetch("https://spreadsheets.google.com/feeds/cells/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/1/public/full?alt=json")
+                    .then(res => res.json())
+                    .then(data => {
+                        let headerRow = "1";
+                        let currRow = "1";
+                        let headerFields = [];
+                        let dataFields = [];
+                        let currLocation = "";
 
-            fetch("https://spreadsheets.google.com/feeds/cells/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/1/public/full?alt=json")
-            .then(res => res.json())
-            .then(data => {
-                let headerRow = "1";
-                let currRow = "1";
-                let headerFields = [];
-                let dataFields = [];
-                let currLocation = "";
+                        let currLat = 0;
+                        let currLng = 0;
+                        let currObj = {};
+                        let popups = {};
 
-                let currLat = 0;
-                let currLng = 0;
-                let currObj = {};
-                let popups = {};
+                        let popup_fields = []
 
-                let popup_fields = []
+                        let div = document.createElement('div');
 
-                let div = document.createElement('div'); 
-                
-                let chart_data = [];
+                        let chart_data = [];
 
-                data.feed.entry.forEach((item,i) => {                       
-                    if(item["gs$cell"]["row"] == headerRow)                                        
-                        headerFields.push(item["gs$cell"]["inputValue"])                                
-                    else
-                    {
-                        if(item["gs$cell"]["row"] != currRow)
-                        {   
-                            currRow = item["gs$cell"]["row"];             
-                            currObj = {};                                      
-                            div = document.createElement('div');                                                                      
-                            div.classList.add("side_item");                            
-                            document.querySelector("#side_panel").append(div);
-                        }
+                        data.feed.entry.forEach((item, i) => {
+                            if (item["gs$cell"]["row"] == headerRow)
+                                headerFields.push(item["gs$cell"]["inputValue"])
+                            else {
+                                if (item["gs$cell"]["row"] != currRow) {
+                                    currRow = item["gs$cell"]["row"];
+                                    currObj = {};
+                                    div = document.createElement('div');
+                                    div.classList.add("side_item");
+                                    document.querySelector("#side_panel").append(div);
+                                }
 
-                        currObj[`${headerFields[parseInt(item["gs$cell"]["col"])-1]}`] = `${item["gs$cell"]["inputValue"]}`;
+                                currObj[`${headerFields[parseInt(item["gs$cell"]["col"])-1]}`] = `${item["gs$cell"]["inputValue"]}`;
 
 
-                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Lat")
-                            currLat = item["gs$cell"]["inputValue"]
-                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Long")
-                            currLng = item["gs$cell"]["inputValue"]       
-                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Location")
-                            currLocation = item["gs$cell"]["inputValue"]   
-                        
-                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Fibre count"){
-                            let obj = {};
-                            obj["field"] = currLocation;
-                            obj["value"] = item["gs$cell"]["inputValue"];
-                            chart_data.push(obj); 
-                        }
-                            
-                    }                          
-                    
-                    
+                                if (headerFields[parseInt(item["gs$cell"]["col"]) - 1] == "Lat")
+                                    currLat = item["gs$cell"]["inputValue"]
+                                if (headerFields[parseInt(item["gs$cell"]["col"]) - 1] == "Long")
+                                    currLng = item["gs$cell"]["inputValue"]
+                                if (headerFields[parseInt(item["gs$cell"]["col"]) - 1] == "Location")
+                                    currLocation = item["gs$cell"]["inputValue"]
 
-                });
+                                if (headerFields[parseInt(item["gs$cell"]["col"]) - 1] == "Fibre count") {
+                                    let obj = {};
+                                    obj["field"] = currLocation;
+                                    obj["value"] = item["gs$cell"]["inputValue"];
+                                    chart_data.push(obj);
+                                }
 
-                am4core.ready(function() {
+                            }
 
-                    // Themes begin
-                    am4core.useTheme(am4themes_dataviz);
-                    // Themes end
 
-                    var chart = am4core.create("chartdiv", am4charts.XYChart);
-                    chart.data = chart_data;
 
-                    chart.padding(40, 40, 40, 40);
+                        });
 
-                    var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-                    categoryAxis.renderer.grid.template.location = 0;
-                    categoryAxis.dataFields.category = "field";
-                    categoryAxis.renderer.minGridDistance = 60;
-                    categoryAxis.renderer.inversed = true;
-                    categoryAxis.renderer.grid.template.disabled = true;
+                        am4core.ready(function() {
 
-                    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-                    valueAxis.min = 0;
-                    valueAxis.extraMax = 0.1;
+                            // Themes begin
+                            am4core.useTheme(am4themes_dataviz);
+                            // Themes end
 
-                    var series = chart.series.push(new am4charts.ColumnSeries());
-                    series.dataFields.categoryX = "field";
-                    series.dataFields.valueY = "value";
-                    series.tooltipText = "{valueY.value}"
-                    series.columns.template.strokeOpacity = 0;
-                    series.columns.template.column.cornerRadiusTopRight = 10;
-                    series.columns.template.column.cornerRadiusTopLeft = 10;
-                    var labelBullet = series.bullets.push(new am4charts.LabelBullet());
-                    labelBullet.label.verticalCenter = "bottom";
-                    labelBullet.label.dy = -10;
-                    labelBullet.label.text = "{values.valueY.workingValue.formatNumber('#.')}";
+                            var chart = am4core.create("chartdiv", am4charts.XYChart);
+                            chart.data = chart_data;
 
-                    chart.zoomOutButton.disabled = true;
+                            chart.padding(40, 40, 40, 40);
 
-                    // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
-                    series.columns.template.adapter.add("fill", function (fill, target) {
-                        return chart.colors.getIndex(target.dataItem.index);
-                    });               
+                            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+                            categoryAxis.renderer.grid.template.location = 0;
+                            categoryAxis.dataFields.category = "field";
+                            categoryAxis.renderer.minGridDistance = 60;
+                            categoryAxis.renderer.inversed = true;
+                            categoryAxis.renderer.grid.template.disabled = true;
 
-                    categoryAxis.sortBySeries = series;
+                            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                            valueAxis.min = 0;
+                            valueAxis.extraMax = 0.1;
 
-                }); // end am4core.ready()       
-            });                
+                            var series = chart.series.push(new am4charts.ColumnSeries());
+                            series.dataFields.categoryX = "field";
+                            series.dataFields.valueY = "value";
+                            series.tooltipText = "{valueY.value}"
+                            series.columns.template.strokeOpacity = 0;
+                            series.columns.template.column.cornerRadiusTopRight = 10;
+                            series.columns.template.column.cornerRadiusTopLeft = 10;
+                            var labelBullet = series.bullets.push(new am4charts.LabelBullet());
+                            labelBullet.label.verticalCenter = "bottom";
+                            labelBullet.label.dy = -10;
+                            labelBullet.label.text = "{values.valueY.workingValue.formatNumber('#.')}";
 
-    </script>
+                            chart.zoomOutButton.disabled = true;
 
+                            // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+                            series.columns.template.adapter.add("fill", function(fill, target) {
+                                return chart.colors.getIndex(target.dataItem.index);
+                            });
+
+                            categoryAxis.sortBySeries = series;
+
+                        }); // end am4core.ready()       
+                    });
+            </script>
     <script>{{ js | jsmin | safe }}</script>
