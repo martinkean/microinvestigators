@@ -9,7 +9,6 @@ summary: Welcome to the MicroInvestigators website!
 tags:
   - microplastics
   - citizen science
-  - ""
 ---
 Microplastics – tiny plastic particles that are smaller than 5 mm – have been found in the most remote places on Earth like Antarctica and Mt Everest. But even though you can’t see them, microplastics are closer to us than we think and can be found in our kai and local rivers. 
 
