@@ -1,14 +1,16 @@
 ---
-title: The fifth and hopefully final example post
-date: 2020-10-15T12:23:39.598Z
-author: Jane Doe
-summary: Why contemplating our mortality can be a powerful catalyst for change
+title: We’re famous (in Southland)
+date: 2021-07-03T22:42:58.625Z
+author: Dr Christine Liang
+summary: "Our microplastics research was featured in an article that was printed
+  in the Southland Times and on Stuff News. "
 tags:
-  - environment
-  - sport
+  - microplastics
+  - science
 ---
-Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
+Our microplastics research was featured in an article that was printed in the Southland Times and on Stuff News.
 
-![A sample inlined image](https://source.unsplash.com/random/600x400)
+![](/static/img/news-article.png)
 
-Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
+Read the article here: 
+Southern Institute of Technology finds affordable solution to measure microplastics <https://www.stuff.co.nz/national/education/123015980/southern-institute-of-technology-finds-affordable-solution-to-measure-microplastics>
