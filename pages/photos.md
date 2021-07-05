@@ -10,7 +10,8 @@ eleventyNavigation:
   order: 1
 ---
 
-<h3>{{ posts.title.rendered }}</h3>
+<!--
+<h3>{{ posts.title.rendered }}</h3> -->
 <div class="gallery-grid">
       {{ posts.content.rendered | safe }}
 </div>
