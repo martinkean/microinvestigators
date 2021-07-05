@@ -1,28 +1,23 @@
 ---
-title: This is the first example post
-metaDescription: This is a sample meta description. If one is not present in your page/post's front matter, the default metadata.desciption will be used instead.
+title: Welcome to the MicroInvestigators website!
+metaDescription: This is a sample meta description. If one is not present in
+  your page/post's front matter, the default metadata.desciption will be used
+  instead.
 date: 2019-01-01T00:00:00.000Z
-author: John Appleseed
-summary: Why contemplating our mortality can be a powerful catalyst for change
+author: Christine Liang
+summary: Welcome to the MicroInvestigators website!
 tags:
-  - tech
-  - environment
-  - politics
-  - sport
+  - microplastics
+  - citizen science
+  - ""
 ---
-Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
+Microplastics – tiny plastic particles that are smaller than 5 mm – have been found in the most remote places on Earth like Antarctica and Mt Everest. But even though you can’t see them, microplastics are closer to us than we think and can be found in our kai and local rivers. 
 
-Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal that has evolved from generation X is on the runway heading towards a streamlined cloud solution. User generated content in real-time will have multiple touchpoints for offshoring.
+Microinvestigators is a citizen science programme aiming to spread awareness of Microplastics in NZ rivers. Our goal is to make the invisible visible! 
 
-## Section Header
+Read more about how our project started here: \
+Tiny Plastics, Big Problems <http://wastenet.org.nz/Tools/BustingWaste/TinyPlastics>
 
-Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line.
+![Waverly School](/static/img/copy-of-waverley2.png "Waverly School")
 
-``` text/2-3
-// this is a command
-function myCommand() {
-	let counter = 0;
-	counter++;
-}
-```
-Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
+Waverly School
