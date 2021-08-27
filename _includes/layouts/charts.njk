@@ -55,7 +55,7 @@ layout: layouts/base.njk
         </main>
 
         <script>
-                fetch("https://spreadsheets.google.com/feeds/cells/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/1/public/full?alt=json")
+                fetch("https://docs.google.com/spreadsheets/d/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/edit?usp=sharing")
                     .then(res => res.json())
                     .then(data => {
                         let headerRow = "1";
