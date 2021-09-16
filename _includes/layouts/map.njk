@@ -108,7 +108,7 @@ layout: layouts/base.njk
         });
 
         map.on('load', function () {
-            fetch("https://spreadsheets.google.com/feeds/cells/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/1/public/full?alt=json")
+            fetch("https://sheets.googleapis.com/v4/spreadsheets/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/values/A:Z?key=AIzaSyDs78mMVJgSyOZSkYmx0wLLPOCbNDTRCq0")
             .then(res => res.json())
             .then(data => {
                 let headerRow = "1";
@@ -130,103 +130,98 @@ layout: layouts/base.njk
                 
                 let chart_data = [];
 
-                data.feed.entry.forEach((item,i) => {                       
-                    if(item["gs$cell"]["row"] == headerRow)                                        
-                        headerFields.push(item["gs$cell"]["inputValue"])                                
-                    else
-                    {
-                        if(item["gs$cell"]["row"] != currRow)
-                        {   
-                            currRow = item["gs$cell"]["row"];             
-                            currObj = {};                                      
-                            div = document.createElement('div');                                                                      
-                            div.classList.add("side_item");                            
-                            document.querySelector("#side_panel").append(div);
-                        }
+                headerFields = data.values[0];
 
-                        currObj[`${headerFields[parseInt(item["gs$cell"]["col"])-1]}`] = `${item["gs$cell"]["inputValue"]}`;
-                        if(side_fields.indexOf(headerFields[parseInt(item["gs$cell"]["col"])-1]) != -1)
-                            div.innerHTML += `<span class="side_header">${headerFields[parseInt(item["gs$cell"]["col"])-1]}</span> ${item["gs$cell"]["inputValue"]}<br/>`;
+                data.values.forEach((row,i) => {                       
+                    if(i > 0)                  
+                    {                                                           
+                        let div = document.createElement('div');                                                                      
+                        div.classList.add("side_item");     
+                        div.setAttribute("id",i);
 
-                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Lat")
-                            currLat = item["gs$cell"]["inputValue"]
-                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Long")
-                            currLng = item["gs$cell"]["inputValue"]       
-                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Location")
-                            currLocation = item["gs$cell"]["inputValue"]   
-                        
-                        if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Fibre count"){
-                            let obj = {};
-                            obj["field"] = currLocation;
-                            obj["value"] = item["gs$cell"]["inputValue"];
-                            chart_data.push(obj); 
-                        }
+                        row.forEach((v,ii) => {
+                            currObj[`${headerFields[ii]}`] = v;
+                            if(side_fields.indexOf(headerFields[ii]) != -1)
+                                div.innerHTML += `<span class="side_header">${headerFields[ii]}</span> ${v}<br/>`;
+                            if(headerFields[ii] == "Lat")
+                                currLat = v
+                            if(headerFields[ii] == "Long")
+                                currLng = v     
+                            if(headerFields[ii] == "Location")
+                                currLocation = v
                             
+                            if(headerFields[ii] == "Fibre count"){
+                                let obj = {};
+                                obj["field"] = currLocation;
+                                obj["value"] = v;
+                                chart_data.push(obj); 
+                            }
+                        })                  
+
+                        div.addEventListener("click", e => {
+                            if(e.target.classList.contains("selected"))
+                            {
+                                document.getElementById(e.target.getAttribute("id")).classList.remove("selected");
+                                popups[e.target.getAttribute("id")].remove();
+                            }
+                            else
+                            {
+                                document.querySelectorAll(".side_item").forEach(x => {
+                                    popups[x.getAttribute("id")].remove();
+                                    x.classList.remove("selected")
+                                })
+                                popups[e.target.getAttribute("id")].addTo(map);
+                                document.getElementById(e.target.getAttribute("id")).classList.add("selected");
+                            }
+                        });                                                    
+ 
+                        document.querySelector("#side_panel").append(div);  
                     }                          
                     
-                    if((data.feed.entry[i+1] && data.feed.entry[i+1]["gs$cell"]["row"] != currRow) || !data.feed.entry[i+1])
-                        if(currLat != 0 && currLng != 0)
-                        {                                          
-                            let popup = new mapboxgl.Popup();
-                            let popup_html = `<h2>${currObj['Location']}</h2>`;
-                            Object.keys(currObj).forEach((k,i) => {
-                                if(i < 10){
-                                    if(k != "Image")
-                                        popup_html += `<span class="popup-label">${k}: </span><span class="popup-data">${currObj[k]}</span></br>`;
-                                    else
-                                        popup_html += `<img class="popup_image" src="${currObj[k]}" />`;
-                                }
-                            });
-                            popup.setHTML(popup_html);
-                            popup.id = i;
-
-                            popup.on("open",(e) => {
-                                document.querySelectorAll(".side_item").forEach(x => {
-                                    x.classList.remove("selected");
-                                })
-                                document.getElementById(`${e.target.id}`).classList.add("selected");
-                            })
-
-                            popup.on("close",(e) => {
-                                document.getElementById(`${e.target.id}`).classList.remove("selected");
-                            })
-
-                            div.setAttribute("id",i);                                
-
-                            let marker = new mapboxgl.Marker()
-                                .setLngLat([currLng, currLat])
-                                .setPopup(popup)
-                                .addTo(map);
-
-                            function flyToLocation(currentFeature) {
-                                map.flyTo({
-                                center: [currLng, currLat],
-                                zoom: 15
-                                });
-                            }
-                           
-                            popups[i] = popup;
-
-                            div.addEventListener("click", e => {
-                                if(e.target.classList.contains("selected"))
-                                {
-                                    document.getElementById(e.target.getAttribute("id")).classList.remove("selected");
-                                    popups[e.target.getAttribute("id")].remove();
-                                }
+                    if(currLat != 0 && currLng != 0)
+                    {                  
+                                                
+                        let popup = new mapboxgl.Popup();
+                        let popup_html = `<h2>${currObj['Location']}</h2>`;
+                        Object.keys(currObj).forEach((k,i) => {
+                            if(i < 10){
+                                if(k != "Image")
+                                    popup_html += `<span class="popup-label">${k}: </span><span class="popup-data">${currObj[k]}</span></br>`;
                                 else
-                                {
-                                    document.querySelectorAll(".side_item").forEach(x => {
-                                        popups[x.getAttribute("id")].remove();
-                                        x.classList.remove("selected")
-                                    })
-                                    popups[e.target.getAttribute("id")].addTo(map);
-                                    document.getElementById(e.target.getAttribute("id")).classList.add("selected");
-                                }
+                                    popup_html += `<img class="popup_image" src="${currObj[k]}" />`;
+                            }
+                        });
+                        popup.setHTML(popup_html);
+                        popup.id = i;
+
+                        popup.on("open",(e) => {
+                            document.querySelectorAll(".side_item").forEach(x => {
+                                x.classList.remove("selected");
+                            })
+                            document.getElementById(`${e.target.id}`).classList.add("selected");
+                        })
+
+                        popup.on("close",(e) => {
+                            document.getElementById(`${e.target.id}`).classList.remove("selected");
+                        })
+
+                        let marker = new mapboxgl.Marker()
+                            .setLngLat([currLng, currLat])
+                            .setPopup(popup)
+                            .addTo(map);
+
+                        function flyToLocation(currentFeature) {
+                            map.flyTo({
+                            center: [currLng, currLat],
+                            zoom: 15
                             });
-                           
-                            currLat = 0;
-                            currLng = 0;              
                         }
+                        
+                        popups[i] = popup;
+
+                        currLat = 0;
+                        currLng = 0;              
+                    }
 
                 });
 /*
