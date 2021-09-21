@@ -111,8 +111,6 @@ layout: layouts/base.njk
             fetch("https://sheets.googleapis.com/v4/spreadsheets/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/values/A:Z?key=AIzaSyDs78mMVJgSyOZSkYmx0wLLPOCbNDTRCq0")
             .then(res => res.json())
             .then(data => {
-                let headerRow = "1";
-                let currRow = "1";
                 let headerFields = [];
                 let dataFields = [];
                 let currLocation = "";
@@ -125,11 +123,8 @@ layout: layouts/base.njk
                 let popups = {};
 
                 let popup_fields = []
-
                 let div = document.createElement('div'); 
                 
-                let chart_data = [];
-
                 headerFields = data.values[0];
 
                 data.values.forEach((row,i) => {                       
@@ -148,14 +143,7 @@ layout: layouts/base.njk
                             if(headerFields[ii] == "Long")
                                 currLng = v     
                             if(headerFields[ii] == "Location")
-                                currLocation = v
-                            
-                            if(headerFields[ii] == "Fibre count"){
-                                let obj = {};
-                                obj["field"] = currLocation;
-                                obj["value"] = v;
-                                chart_data.push(obj); 
-                            }
+                                currLocation = v                    
                         })                  
 
                         div.addEventListener("click", e => {
@@ -179,8 +167,7 @@ layout: layouts/base.njk
                     }                          
                     
                     if(currLat != 0 && currLng != 0)
-                    {                  
-                                                
+                    {                                                                  
                         let popup = new mapboxgl.Popup();
                         let popup_html = `<h2>${currObj['Location']}</h2>`;
                         Object.keys(currObj).forEach((k,i) => {
@@ -222,7 +209,6 @@ layout: layouts/base.njk
                         currLat = 0;
                         currLng = 0;              
                     }
-
                 });
 /*
                 am4core.ready(function() {
