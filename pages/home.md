@@ -7,7 +7,6 @@ eleventyNavigation:
   key: Home
   order: 0
 ---
-
 <style>
   .videoWrapper {
     position: relative;
@@ -37,7 +36,7 @@ eleventyNavigation:
     <div class="row py-lg-5">
       <div class="col-lg-6 col-md-8 mx-auto">
         <h1 class="fw-light">Mission Statement</h1>
-        <p class="lead text-muted">Southland schools need to become educated and aware of environmental issues of microplastics in the local waterways or Murihiku, because this will enable action to be taken within the community, based off the data, creating positive environmental change.</p>
+        <p class="lead text-muted">Engaging Southland schools to become educated and aware of environmental issues of microplastics in the local waterways of Murihiku, because this will enable action to be taken within the community, based off the data, creating positive environmental change.</p>
       </div>
     </div>
   </section>
