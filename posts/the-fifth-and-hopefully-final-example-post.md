@@ -1,7 +1,7 @@
 ---
 title: We’re famous (in Southland)
 date: 2021-07-03T22:42:58.625Z
-author: Dr Christine Liang
+author: Micro-Investigators
 summary: "Our microplastics research was featured in an article that was printed
   in the Southland Times and on Stuff News. "
 tags:
