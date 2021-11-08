@@ -21,12 +21,17 @@ eleventyNavigation:
     </div>
   </section>
 
+<div class="container">
+    <section class="text-center container">
+    <div class="row">
+      <div class="col-lg-6 col-md-8 mx-auto">
+
 <!DOCTYPE html>
 
 <html lang="en-US">
 <body>
 
-<h2>You can also contact us via our Facebook</h2>
+<h2>You can also contact us via our Facebook page</h2>
 <a href="https://www.facebook.com/microinvestigators" title="Visit our Facebook page">Visit our Facebook page</a>
 
 </body>
