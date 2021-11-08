@@ -16,7 +16,9 @@ eleventyNavigation:
     <div class="row">
       <div class="col-lg-6 col-md-8 mx-auto">
         <h1 class="fw-light">Contact</h1>
-        <p class="lead text-muted">Please feel free to get in touch if you are interested in participating in the Micro-Investigators programme! You can also contact us via our Facebook page [www.facebook.com/microinvestigators](www.facebook.com/microinvestigators)</p>
+        <p class="lead text-muted">Please feel free to get in touch if you are interested in participating in the Micro-Investigators programme! You can also contact us via our Facebook page</p>
       </div>
     </div>
   </section>
+
+[www.facebook.com/microinvestigators](www.facebook.com/microinvestigators)
