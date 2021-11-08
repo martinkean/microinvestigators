@@ -1,7 +1,7 @@
 ---
 title: Our project is now nationally recognised and funded
 date: 2021-07-01T22:45:58.846Z
-author: Dr Christine Liang
+author: Micro-Investigators
 summary: We have now secured funding!
 tags:
   - science
