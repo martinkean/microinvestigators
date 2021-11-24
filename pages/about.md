@@ -9,9 +9,15 @@ eleventyNavigation:
   key: About
   order: 1
 ---
+<section class="text-center container">
+    <div class="row padding">
+      <div class="col-lg-6 col-md-8 mx-auto">
+
 ![](/static/img/logos.jpg)
 
- 
+\    </div>
+    </div>
+  </section>
 
 <section class="text-center container">
     <div class="row padding">
