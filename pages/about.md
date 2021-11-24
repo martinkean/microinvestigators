@@ -9,7 +9,11 @@ eleventyNavigation:
   key: About
   order: 1
 ---
- <section class="text-center container">
+![](/static/img/logos.jpg)
+
+ 
+
+<section class="text-center container">
     <div class="row padding">
       <div class="col-lg-6 col-md-8 mx-auto">
         <h1 class="fw-light">About</h1>
@@ -39,7 +43,6 @@ eleventyNavigation:
 
   <div class="row">
       <div class="col-lg-4">
-
 
 ![](/static/img/0w3a1097.jpg)
 
