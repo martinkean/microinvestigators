@@ -1,104 +1,263 @@
-<!doctype html>
-<html {% if section %} data-current="{{ section }}"{% endif %} lang="en">
+---
+section: map
+layout: layouts/base.njk
+---
 
-	{% include "components/head.njk" %}
+{% set css %}
+    {% include "assets/css/inline.css" %}
+    {% include "assets/css/custom.css" %}
+  {% endset %}
 
-		<style>
-			main {
-				display:grid;
-				align-items: center;
-				grid-gap: 1rem;
-  				grid-template-columns: 1fr 1fr;
-			}
-			.card {	
-				display:flex;
-				flex-direction:row;
-				justify-content:space-between;
-				min-height : 10rem;	
-				padding: 20px;
-				background-color: #fff;
-				border: 0;
-				box-shadow:
-				0 2.8px 2.2px rgba(0, 0, 0, 0.034),
-				0 6.7px 5.3px rgba(0, 0, 0, 0.048),
-				0 12.5px 10px rgba(0, 0, 0, 0.06),
-				0 22.3px 17.9px rgba(0, 0, 0, 0.072),
-				0 41.8px 33.4px rgba(0, 0, 0, 0.086),
-				0 10px 10px rgba(0, 0, 0, 0.1)
-				;
-			}
-			.img_div{
-				width:50%;
-				height:250px;
-				overflow:hidden;
-			}
-			.result-item {
-				color: #2c4361;
-				font-size: .9em;
-				margin: 1rem 0;
-			}
+        <meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Map</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.3.0-beta.1/mapbox-gl.css" rel="stylesheet">
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.0-beta.1/mapbox-gl.js"></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+        <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+        <script src="https://cdn.amcharts.com/lib/4/themes/dataviz.js"></script>
+        <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
-			.result-item:first-child  {
-				font-size: .7em;
-				color: #0457c4;
-			}
-		</style>
+        <style>
 
-	<body>
+            body { margin: 0; padding: 0; font-family: 'Work Sans', sans-serif; display: grid;
+                    height: 100vh;
+                    grid-template-rows: auto 1fr auto;
+                     }
+            main { margin: 0;position:relative;height:100vh;box-sizing:border-box;padding:0 }
+            #map { position: absolute; top: 0; bottom: 0; left:0;right:0 }
+            #side_panel { position:absolute; top: 0; width:30%; background:white; height:100vh; z-index: 2; overflow-y:scroll }
+            .side_item{ padding:30px;border-bottom:1px solid black;cursor:pointer; }
+            .side_item:hover { background:#eee; }
+            .side_item.selected{
+                background:#ebfaeb;
+            }
+            .side_header { font-weight:bold; color:green; }
+            .mapboxgl-popup-content h2 { font-weight: 700; font-size: 2em; color: green; margin: 0 0 10px 0; }
+            .popup-label { font-weight: 600; color: green; }
+            .popup-data { font-weight: 400; color: #333; }
+            .popup_image { width: 100%; }
+            .mapboxgl-popup-content {
+                padding: 20px;
+                border-radius: 6px;
+                width: 300px;
+                border: 8px solid #cfe6cf;
+            }
+            .mapboxgl-popup-close-button {
+                right: 5px;
+                top: 5px;
+                width: 20px;
+                height: 20px;
+                color: green;
+            }
+            .mapboxgl-popup-anchor-top .mapboxgl-popup-tip { border-bottom-color: #cfe6cf; }
+            #chartdiv {
+                position:fixed;
+                background:white;
+                bottom:0;
+                right:0;
+                width: 70%;
+                height: 460px;
+            }
+            
+            a[href],
+                a[href]:visited {
+                }
 
-		<header>
-			<img class="brand-logo" src="/_includes/assets/img/brand-logo-2.svg"/>
-			{% include "components/nav.njk" %}
-		</header>
+                a[href]:not(:hover) {
+                text-decoration: none;
+                }
 
-		<main>
+            .pagetesthead {
+                color: cornflowerblue;
+                }
 
-		</main>
+       
+        </style>
 
-		<script>
-		    let side_fields = ["Date","Location","Collected by","Microplastics concentration (Number of microplastics / Filtered water volume)"];
+    </head>
+    <body>
 
-			let headerRow = "1";
-            let currRow = "1";
-            let headerFields = [];
+        <main>
+            <div id="side_panel"></div>
+            <div id="map"></div>
+        </main>
 
-			fetch("https://spreadsheets.google.com/feeds/cells/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/1/public/full?alt=json")
+        <script>
+        var transformRequest = (url, resourceType) => {
+          var isMapboxRequest =
+            url.slice(8, 22) === "api.mapbox.com" ||
+            url.slice(10, 26) === "tiles.mapbox.com";
+          return {
+            url: isMapboxRequest
+              ? url.replace("?", "?pluginName=sheetMapper&")
+              : url
+          };
+        };
+
+        mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGlua2VhbiIsImEiOiJjazJ2Zmt3cDgwNG52M2JxbXZ5OHVmNGVrIn0.83FDGF7SZfT3gqCXT1TuuQ';
+        var map = new mapboxgl.Map({
+          container: 'map', // container id
+          style: "mapbox://styles/martinkean/ck2vfpcsp0j7g1cqxh3p3lv00",
+          center: [168.6842137,-46.1754413], // starting position [lng, lat] -45.770090, 168.984942, Awatere, Southland
+          zoom: 9, // starting zoom
+          transformRequest: transformRequest
+        });
+
+        map.on('load', function () {
+            fetch("https://sheets.googleapis.com/v4/spreadsheets/15tngdLyCqm_wzF9Jv2za4DdGLxPyOf9BHtVwlEIK-J0/values/A:Z?key=AIzaSyDs78mMVJgSyOZSkYmx0wLLPOCbNDTRCq0")
             .then(res => res.json())
             .then(data => {
-				let main = document.querySelector("main");
-				let card = document.createElement("div");
-				data.feed.entry.forEach((item,i) => {       
-					if(item["gs$cell"]["row"] == headerRow)                                        
-                        headerFields.push(item["gs$cell"]["inputValue"])                                
-                    else
-                    {
-                        if(item["gs$cell"]["row"] != currRow)
-                        {   
-                            currRow = item["gs$cell"]["row"];             
-							card = document.createElement("div");
-							card.classList.add("card");
+                let headerFields = [];
+                let dataFields = [];
+                let currLocation = "";
 
-							let innerText = document.createElement("div");
-							let img_div = document.createElement("div");
-							let img = document.createElement("img");
-							img_div.classList.add("img_div");
-							img_div.append(img);
-							card.append(innerText, img_div);
-							main.append(card);
-						}
+                let side_fields = ["Date","Location","Collected by"];
 
-						if(headerFields[parseInt(item["gs$cell"]["col"])-1] == "Image")
-							card.querySelector("img").src = item["gs$cell"]["inputValue"];
+                let currLat = 0;
+                let currLng = 0;
+                let currObj = {};
+                let popups = {};
 
-						if(side_fields.indexOf(headerFields[parseInt(item["gs$cell"]["col"])-1]) != -1)
-                        	card.querySelector("div").innerHTML += `<p class="result-item">${item["gs$cell"]["inputValue"]}</p>`;
-					}
-				});                
-			});
-		</script>
+                let popup_fields = []
+                let div = document.createElement('div'); 
+                
+                headerFields = data.values[0];
 
-		{% include "components/footer.njk" %}
+                data.values.forEach((row,i) => {                       
+                    if(i > 0)                  
+                    {                                                           
+                        let div = document.createElement('div');                                                                      
+                        div.classList.add("side_item");     
+                        div.setAttribute("id",i);
 
-	</body>
+                        row.forEach((v,ii) => {
+                            currObj[`${headerFields[ii]}`] = v;
+                            if(side_fields.indexOf(headerFields[ii]) != -1)
+                                div.innerHTML += `<span class="side_header">${headerFields[ii]}</span> ${v}<br/>`;
+                            if(headerFields[ii] == "Lat")
+                                currLat = v
+                            if(headerFields[ii] == "Long")
+                                currLng = v     
+                            if(headerFields[ii] == "Location")
+                                currLocation = v                    
+                        })                  
 
-</html>
+                        div.addEventListener("click", e => {
+                            if(e.target.classList.contains("selected"))
+                            {
+                                document.getElementById(e.target.getAttribute("id")).classList.remove("selected");
+                                popups[e.target.getAttribute("id")].remove();
+                            }
+                            else
+                            {
+                                document.querySelectorAll(".side_item").forEach(x => {
+                                    popups[x.getAttribute("id")].remove();
+                                    x.classList.remove("selected")
+                                })
+                                popups[e.target.getAttribute("id")].addTo(map);
+                                document.getElementById(e.target.getAttribute("id")).classList.add("selected");
+                            }
+                        });                                                    
+ 
+                        document.querySelector("#side_panel").append(div);  
+                    }                          
+                    
+                    if(currLat != 0 && currLng != 0)
+                    {                                                                  
+                        let popup = new mapboxgl.Popup();
+                        let popup_html = `<h2>${currObj['Location']}</h2>`;
+                        Object.keys(currObj).forEach((k,i) => {
+                            if(i < 10){
+                                if(k != "Image")
+                                    popup_html += `<span class="popup-label">${k}: </span><span class="popup-data">${currObj[k]}</span></br>`;
+                                else
+                                    popup_html += `<img class="popup_image" src="${currObj[k]}" />`;
+                            }
+                        });
+                        popup.setHTML(popup_html);
+                        popup.id = i;
+
+                        popup.on("open",(e) => {
+                            document.querySelectorAll(".side_item").forEach(x => {
+                                x.classList.remove("selected");
+                            })
+                            document.getElementById(`${e.target.id}`).classList.add("selected");
+                        })
+
+                        popup.on("close",(e) => {
+                            document.getElementById(`${e.target.id}`).classList.remove("selected");
+                        })
+
+                        let marker = new mapboxgl.Marker()
+                            .setLngLat([currLng, currLat])
+                            .setPopup(popup)
+                            .addTo(map);
+
+                        function flyToLocation(currentFeature) {
+                            map.flyTo({
+                            center: [currLng, currLat],
+                            zoom: 15
+                            });
+                        }
+                        
+                        popups[i] = popup;
+
+                        currLat = 0;
+                        currLng = 0;              
+                    }
+                });
+/*
+                am4core.ready(function() {
+
+                    // Themes begin
+                    am4core.useTheme(am4themes_dataviz);
+                    // Themes end
+
+                    var chart = am4core.create("chartdiv", am4charts.XYChart);
+                    chart.data = chart_data;
+
+                    chart.padding(40, 40, 40, 40);
+
+                    var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+                    categoryAxis.renderer.grid.template.location = 0;
+                    categoryAxis.dataFields.category = "field";
+                    categoryAxis.renderer.minGridDistance = 60;
+                    categoryAxis.renderer.inversed = true;
+                    categoryAxis.renderer.grid.template.disabled = true;
+
+                    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                    valueAxis.min = 0;
+                    valueAxis.extraMax = 0.1;
+
+                    var series = chart.series.push(new am4charts.ColumnSeries());
+                    series.dataFields.categoryX = "field";
+                    series.dataFields.valueY = "value";
+                    series.tooltipText = "{valueY.value}"
+                    series.columns.template.strokeOpacity = 0;
+                    series.columns.template.column.cornerRadiusTopRight = 10;
+                    series.columns.template.column.cornerRadiusTopLeft = 10;
+                    var labelBullet = series.bullets.push(new am4charts.LabelBullet());
+                    labelBullet.label.verticalCenter = "bottom";
+                    labelBullet.label.dy = -10;
+                    labelBullet.label.text = "{values.valueY.workingValue.formatNumber('#.')}";
+
+                    chart.zoomOutButton.disabled = true;
+
+                    // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+                    series.columns.template.adapter.add("fill", function (fill, target) {
+                        return chart.colors.getIndex(target.dataItem.index);
+                    });               
+
+                    categoryAxis.sortBySeries = series;
+
+                }); // end am4core.ready()       */
+            });                
+        });
+
+    </script>
+
+    <script>{{ js | jsmin | safe }}</script>
