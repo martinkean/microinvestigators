@@ -86,7 +86,7 @@ layout: layouts/base.njk
                                 let obj1 = {};
                                 let obj2 = {};
                                 row.forEach((v,ii) => {
-                                    if (headerFields[ii] == "Fibre count")
+                                    if (headerFields[ii] == "Total count")
                                         obj1["value"] = v;
                                     else if(headerFields[ii] == "Microplastics concentration (Number of microplastics / Filtered water volume)")
                                         obj2["value"] = v;
@@ -113,7 +113,7 @@ layout: layouts/base.njk
                             chart.padding(40, 40, 40, 40);
 
                             let title = chart.titles.create();
-                            title.text = "Fibre count";
+                            title.text = "Total count";
 
                             chart.data = chart_data;
 
