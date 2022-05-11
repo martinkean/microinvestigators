@@ -20,10 +20,37 @@ eleventyNavigation:
 
 ![](https://res.cloudinary.com/dnf1xnzg3/image/upload/v1652244416/MicroInvestigators/hui1_dqn8pz.jpg)
 
+<h3> </h3>
+        <p> </p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+
 ![](https://res.cloudinary.com/dnf1xnzg3/image/upload/v1652244416/MicroInvestigators/hui2_cm78bo.jpg)
+
+<h3> </h3>
+        <p> </p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
 
 ![](https://res.cloudinary.com/dnf1xnzg3/image/upload/v1652244416/MicroInvestigators/hui3_d58aba.jpg)
 
+<h3> </h3>
+        <p> </p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+
 ![](https://res.cloudinary.com/dnf1xnzg3/image/upload/v1652244600/MicroInvestigators/green_screen_photo_hui_aqrvmd.jpg)
 
+<h3> </h3>
+        <p> </p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+
 ![](https://res.cloudinary.com/dnf1xnzg3/image/upload/v1652244416/MicroInvestigators/hui4_toqu6r.jpg)
+
+<h3> </h3>
+        <p> </p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+
+</div>
