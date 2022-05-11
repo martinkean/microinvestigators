@@ -18,6 +18,11 @@ eleventyNavigation:
       {{ posts.content.rendered | safe }}
 </div>
 
+<h3> </h3>
+        <p> </p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+
 ![](https://res.cloudinary.com/dnf1xnzg3/image/upload/v1652244416/MicroInvestigators/hui1_dqn8pz.jpg)
 
 <h3> </h3>
