@@ -61,7 +61,7 @@ eleventyNavigation:
       </div><!-- /.col-lg-4 -->
       <div class="col-lg-4">
 
-![](https://res.cloudinary.com/dnf1xnzg3/image/upload/v1663592696/MicroInvestigators/MI_Steph_kslvde.jpg)
+![](https://res.cloudinary.com/dnf1xnzg3/image/upload/v1663595175/MicroInvestigators/MI_Steph_copy_pmgkrw.jpg)
 
   <h3>Stephanie Shaw (she/her)</h3>
         <p>Stephanie is the current student kaimahi for Micro-Investigators: she leads the awa field session and is involved in the rollout of Microplastics DIY Sampling Kits for the community. She is currently working with Enviroschools to help connect high schools with primary schools to collect microplastics data together. Stephanie is a first year Bachelor of Environmental Management student at SIT.</p>
