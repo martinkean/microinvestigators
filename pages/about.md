@@ -72,7 +72,7 @@ eleventyNavigation:
 ![](https://res.cloudinary.com/dnf1xnzg3/image/upload/v1663592693/MicroInvestigators/MI_Rani_lfa5wx.jpg)
 
   <h3>Rani Fernandez (she/her)</h3>
-        <p>Rani is the programme manager of the SIT Certificate of Environmental Management courses and also a kaiako at SIT. Rani supervised, manged and completed her own Eco-friendly resort project in India in 2012 at the midst of a Mangrove ecosystem while preserving the unique flora and fauna and incorporating the best of all environmental management systems. An enthusiastic nature lover who believes that it is our responsibility to make this environment a better place for the future generation.</p>
+        <p>Rani is the programme manager of the SIT Certificate of Environmental Management courses and also a kaiako at SIT. Rani coordinates Micro-Investigators field sessions with local schools and links them to teaching in her certificate classes so her students get a chance to practice environmental communication. She is an enthusiastic nature lover who believes that it is our responsibility to make this environment a better place for the future generation.</p>
       </div><!-- /.col-lg-4 -->
     </div><!-- /.row -->
           </div>
