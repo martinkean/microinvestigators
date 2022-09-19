@@ -90,7 +90,7 @@ eleventyNavigation:
   <div class="row">
       <div class="col-lg-4">
 
-\    
+ 
 
 ![](/static/img/430_3124.jpg)
 
@@ -110,7 +110,7 @@ eleventyNavigation:
 ![](/static/img/em107-class-photo-lab.jpg)
 
   <h3>Jordan Mann (they/them)</h3>
-        <p>Jordan (Ngāi Tahu / Kāi Tahu) was the social media manager for the Micro Investigators Facebook and Instagram accounts in 2021. Jordan was a student on the Bachelor of Environmental Management at SIT and posted lots of tips to help people achieve a sustainable lifestyle and as well as stories that shared community engagement with the Micro-Investigators programme.</p>
+        <p>Jordan (Ngāi Tahu / Kāi Tahu) was the social media manager for the Micro Investigators Facebook and Instagram accounts in 2021. Jordan was a student on the Bachelor of Environmental Management at SIT. They posted lots of tips to help people achieve a sustainable lifestyle as well as stories that shared community engagement with the Micro-Investigators programme.</p>
       </div><!-- /.col-lg-4 -->
     </div><!-- /.row -->
-          </div>\
+          </div>
