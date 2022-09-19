@@ -57,7 +57,7 @@ eleventyNavigation:
 ![](https://res.cloudinary.com/dnf1xnzg3/image/upload/v1663592695/MicroInvestigators/MI_Paula_qekp1w.jpg)
 
   <h3>Paula López (she/her)</h3>
-        <p>Paula (Chile) is the social media manager for the Micro Investigators Facebook and Instagram accounts. Paula studied a Grad Dip in Environmental Management at SIT. She is an environmentalist and believes in the power of making a positive difference. She left 'home' seven years ago and has been living abroad ever since, giving her a huge amount of adaptability and resiliency to adverse circumstances, besides tolerance and empathy for others.</p>
+        <p>Paula (Chile) is the social media manager for the Micro-Investigators Facebook and Instagram accounts. Paula studied a Grad Dip in Environmental Management at SIT. She is an environmentalist and believes in the power of making a positive difference. She left 'home' seven years ago and has been living abroad ever since, giving her a huge amount of adaptability and resiliency to adverse circumstances, besides tolerance and empathy for others.</p>
       </div><!-- /.col-lg-4 -->
       <div class="col-lg-4">
 
