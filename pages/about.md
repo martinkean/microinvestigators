@@ -52,7 +52,14 @@ eleventyNavigation:
         <p>Christine is the programme manager of the SIT Environmental Management degree and graduate diploma and also teaches on these courses. She is passionate about citizen science and environmental education and she feels lucky that there are so many others in the community that share this drive to make the environment a better place through accessible education initiatives. Christine works with community members, schools, and SIT students to run Micro-Investigators through a tuākana-tēina (student-led) approach.</p>
       </div><!-- /.col-lg-4 -->
       <div class="col-lg-4">
-        
+
+
+![](/static/img/josh-.jpg)
+
+  <h3>Josh Sullivan (he/him)</h3>
+        <p>Kia ora koutou my name is Josh Sullivan I am the Enviroschools Regional Co-ordinator and Senior Education Advisor at Environment Southland. I’ve been working in the education sector for the last 20 years which includes working as a primary school teacher, outdoor instructor and nature guide. I’m passionate about environmental education and helping others to connect to the world around us. I feel privileged to be working in a community of like-minded people that share my passionate and enthusiasm for improving our environment while helping to raise awareness of environmental issues. When I’m not working I’m busy planting native trees on our lifestyle property or exploring some of the untamed mountain bike trails around New Zealand.</p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">        
 
 ![](https://res.cloudinary.com/dnf1xnzg3/image/upload/v1663592695/MicroInvestigators/MI_Paula_qekp1w.jpg)
 
@@ -89,8 +96,6 @@ eleventyNavigation:
 
   <div class="row">
       <div class="col-lg-4">
-
- 
 
 ![](/static/img/430_3124.jpg)
 
